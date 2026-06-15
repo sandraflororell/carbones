@@ -1480,3 +1480,225 @@ button { cursor: pointer; font-family: inherit; }
   .modal-info-col  { padding: 1.25rem 1.25rem 1.75rem; }
   .modal-precio    { font-size: 1.6rem; }
 }
+
+/* ──────────────────────────────────────────────
+   16. BLOQUE QR EN EL PANEL LATERAL
+   Aparece entre la lista de ítems y el botón
+   de "Finalizar pedido". Oculto si el carrito
+   está vacío (JS lo controla con display:none).
+─────────────────────────────────────────────── */
+
+.panel-qr-block {
+  /* Oculto por defecto hasta que haya productos */
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: .55rem;
+
+  background: rgba(64, 255, 191, .05);
+  border: 1px solid rgba(64, 255, 191, .22);
+  border-radius: var(--r-lg);
+  padding: 1rem 1.1rem 1.1rem;
+  margin-bottom: .2rem;
+
+  /* Animación de aparición */
+  animation: qrFadeIn .3s ease both;
+}
+
+@keyframes qrFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Título de la sección QR */
+.panel-qr-titulo {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .55px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+/* Recuadro blanco que enmarca el QR */
+.panel-qr-frame {
+  width: 148px;
+  height: 148px;
+  background: #ffffff;
+  border-radius: var(--r-md);
+  border: 3px solid var(--accent);
+  box-shadow:
+    0 0 20px rgba(64, 255, 191, .28),
+    0 4px 14px rgba(0, 0, 0, .35);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.panel-qr-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+/* Texto del monto total bajo el QR */
+.panel-qr-monto {
+  font-size: .82rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.panel-qr-monto strong {
+  color: var(--accent);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-shadow: 0 0 12px var(--accent-glow);
+  /* Animación suave al cambiar el valor */
+  display: inline-block;
+  transition: transform .18s ease;
+}
+
+/* Línea informativa inferior */
+.panel-qr-info {
+  font-size: .7rem;
+  color: var(--text-dim);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.45;
+  border-top: 1px solid rgba(64, 255, 191, .14);
+  padding-top: .5rem;
+  width: 100%;
+}
+
+/* ──────────────────────────────────────────────
+   17. BOTÓN "SEGUIR PIDIENDO" — Panel lateral
+   Fondo #A0FE51 · texto oscuro · destello infinito
+─────────────────────────────────────────────── */
+
+.btn-seguir-pidiendo {
+  /* Posicionamiento y tamaño */
+  position: relative;
+  width: 100%;
+  padding: .82rem 1.25rem;
+  overflow: hidden;            /* contiene el barrido brillante */
+
+  /* Color base requerido */
+  background: #A0FE51;
+  color: #0d1a00;
+
+  /* Tipografía */
+  font-size: .88rem;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+
+  /* Forma */
+  border: none;
+  border-radius: var(--r-lg);  /* ~20 px, equivalente a rounded-xl */
+
+  /* Layout interno */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+
+  /* Transición base */
+  transition:
+    transform   .2s cubic-bezier(.4,0,.2,1),
+    box-shadow  .2s cubic-bezier(.4,0,.2,1),
+    background  .2s ease;
+
+  /* Destello / glow pulsante continuo */
+  animation: seguir-glow 2.2s ease-in-out infinite;
+
+  cursor: pointer;
+  z-index: 0;
+}
+
+/* ── Keyframe del glow pulsante ── */
+@keyframes seguir-glow {
+  0%, 100% {
+    box-shadow:
+      0 0  8px  rgba(160, 254, 81, .50),
+      0 0  18px rgba(160, 254, 81, .30),
+      0 4px 14px rgba(0, 0, 0, .25);
+  }
+  50% {
+    box-shadow:
+      0 0  16px rgba(160, 254, 81, .80),
+      0 0  36px rgba(160, 254, 81, .50),
+      0 0  58px rgba(160, 254, 81, .22),
+      0 4px 18px rgba(0, 0, 0, .30);
+  }
+}
+
+/* ── Barrido brillante con pseudo-elemento ::after ── */
+.btn-seguir-pidiendo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -110%;             /* arranca fuera del botón por la izquierda */
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, .55) 50%,
+    transparent 80%
+  );
+  transform: skewX(-18deg);
+  animation: seguir-sweep 2.2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Keyframe del barrido ── */
+@keyframes seguir-sweep {
+  0%   { left: -110%; }
+  55%  { left:  120%; }   /* el destello cruza todo el botón */
+  100% { left:  120%; }   /* espera en reposo hasta el siguiente ciclo */
+}
+
+/* ── Estado hover: eleva ligeramente y aumenta el glow ── */
+.btn-seguir-pidiendo:hover {
+  background: #b5ff6a;
+  transform: translateY(-2px) scale(1.015);
+  animation: none;          /* pausa la animación auto para que el hover se vea limpio */
+  box-shadow:
+    0 0 22px rgba(160, 254, 81, .85),
+    0 0 44px rgba(160, 254, 81, .45),
+    0 6px 20px rgba(0, 0, 0, .30);
+}
+
+/* ── Estado active: press hacia abajo ── */
+.btn-seguir-pidiendo:active {
+  transform: translateY(1px) scale(.98);
+  box-shadow:
+    0 0 10px rgba(160, 254, 81, .60),
+    0 2px 8px rgba(0, 0, 0, .25);
+}
+
+/* ── El SVG hereda el color del texto ── */
+.btn-seguir-pidiendo svg {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;              /* encima del barrido */
+  transition: transform .2s ease;
+}
+
+.btn-seguir-pidiendo:hover svg {
+  transform: translateX(-3px);  /* flecha se mueve a la izquierda en hover */
+}
+
+/* Texto también encima del barrido */
+.btn-seguir-pidiendo span,
+.btn-seguir-pidiendo {
+  position: relative;
+  z-index: 2;
+}
