@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TIENDA VIRTUAL – CARBÓN ECO</title>
+    <link rel="stylesheet" href="estilo.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- ══════════════════════════════════════════════
+         ENCABEZADO / NAVBAR
+    ══════════════════════════════════════════════ -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2L2 7L12 12L22 7L12 2Z"
+                stroke="#af40ff"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2 17L12 22L22 17"
+                stroke="#af40ff"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M2 12L12 17L22 12"
+                stroke="#af40ff"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <span class="logo-text">TIENDA VIRTUAL</span>
+        </div>
+
+        <nav class="nav-links">
+          <a href="#" class="nav-link active">Inicio</a>
+          <a href="#" class="nav-link">Catálogo</a>
+          <a href="#" class="nav-link">Nosotros</a>
+          <a href="#" class="nav-link">Contacto</a>
+        </nav>
+
+        <div class="header-actions">
+          <button class="icon-btn" aria-label="Buscar">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </button>
+          <button class="icon-btn" aria-label="Carrito" onclick="window.location.href='carrito.html'">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            <span class="cart-badge">6</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════════
+         HERO BANNER
+    ══════════════════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+      <div class="hero-content">
+        <span class="hero-badge">Colección 2025</span>
+        <h1 class="hero-title">
+          Carbón Ecológico<br /><span class="accent">Premium</span>
+        </h1>
+        <p class="hero-subtitle">
+          Productos artesanales de alta calidad. Bolsas, papel y gangocho con el
+          mejor carbón vegetal y ecológico.
+        </p>
+        <div class="hero-cta">
+          <a href="#catalogo" class="btn-principal">Ver Catálogo</a>
+          <a href="#" class="btn-ghost">Conocer más</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value">6+</span>
+          <span class="stat-label">Productos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Ecológico</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">24h</span>
+          <span class="stat-label">Entrega</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         CATEGORÍAS RÁPIDAS
+    ══════════════════════════════════════════════ -->
+    <section class="categorias-strip">
+      <div class="categorias-inner">
+        <button class="cat-chip active">Todos</button>
+        <button class="cat-chip">Gangocho</button>
+        <button class="cat-chip">Papel</button>
+        <button class="cat-chip">Bolsas</button>
+        <button class="cat-chip">Ecológico</button>
+        <button class="cat-chip">Vegetal</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         CATÁLOGO PRINCIPAL — GRID 3 COLUMNAS
+    ══════════════════════════════════════════════ -->
+    <main class="catalogo-section" id="catalogo">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Nuestros Productos</h2>
+          <p class="section-sub">Selecciona el producto que necesitas</p>
+        </div>
+        <span class="product-count">6 artículos</span>
+      </div>
+
+      <div class="catalogo-grid">
+        <!-- Producto 1 -->
+        <a href="#" class="card-link">
+          <article class="card-producto">
+            <div class="card-badge">Popular</div>
+            <div class="producto-img">
+              <img
+                src="img/carbon_vegetal_gangocho.png"
+                alt="Carbón en Gangocho Vegetal"
+                loading="lazy"
+              />
+              <div class="img-overlay">
+                <button class="overlay-btn" aria-label="Vista rápida">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-category">Gangocho · Vegetal</span>
+              <h3 class="card-title">En Gangocho Vegetal</h3>
+              <div class="card-footer">
+                <span class="precio">110 Bs</span>
+                <button class="btn-add" aria-label="Agregar al carrito">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Producto 2 -->
+        <a href="#" class="card-link">
+          <article class="card-producto">
+            <div class="card-badge eco">Eco</div>
+            <div class="producto-img">
+              <img
+                src="img/gangocho_ecologico.png"
+                alt="Carbón en Gangocho Ecológico"
+                loading="lazy"
+              />
+              <div class="img-overlay">
+                <button class="overlay-btn" aria-label="Vista rápida">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-category">Gangocho · Ecológico</span>
+              <h3 class="card-title">En Gangocho Ecológico</h3>
+              <div class="card-footer">
+                <span class="precio">120 Bs</span>
+                <button class="btn-add" aria-label="Agregar al carrito">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Producto 3 -->
+        <a href="#" class="card-link">
+          <article class="card-producto">
+            <div class="producto-img">
+              <img
+                src="img/carbon_papel_vegetal.png"
+                alt="Papel Mediano Vegetal"
+                loading="lazy"
+              />
+              <div class="img-overlay">
+                <button class="overlay-btn" aria-label="Vista rápida">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-category">Papel · Vegetal</span>
+              <h3 class="card-title">Papel Mediano Vegetal</h3>
+              <div class="card-footer">
+                <span class="precio">20 Bs</span>
+                <button class="btn-add" aria-label="Agregar al carrito">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Producto 4 -->
+        <a href="#" class="card-link">
+          <article class="card-producto">
+            <div class="card-badge eco">Eco</div>
+            <div class="producto-img">
+              <img
+                src="img/carbon_ecologico_papel.png"
+                alt="Papel Mediano Ecológico"
+                loading="lazy"
+              />
+              <div class="img-overlay">
+                <button class="overlay-btn" aria-label="Vista rápida">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-category">Papel · Ecológico</span>
+              <h3 class="card-title">Papel Mediano Ecológico</h3>
+              <div class="card-footer">
+                <span class="precio">21 Bs</span>
+                <button class="btn-add" aria-label="Agregar al carrito">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Producto 5 -->
+        <a href="#" class="card-link">
+          <article class="card-producto">
+            <div class="card-badge">Oferta</div>
+            <div class="producto-img">
+              <img
+                src="img/pequeño_papel.png"
+                alt="Papel Pequeño"
+                loading="lazy"
+              />
+              <div class="img-overlay">
+                <button class="overlay-btn" aria-label="Vista rápida">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-category">Papel · Pequeño</span>
+              <h3 class="card-title">Papel Pequeño</h3>
+              <div class="card-footer">
+                <span class="precio">10 Bs</span>
+                <button class="btn-add" aria-label="Agregar al carrito">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+
+        <!-- Producto 6 -->
+        <a href="#" class="card-link">
+          <article class="card-producto">
+            <div class="producto-img">
+              <img src="img/bolsas.png" alt="Carbón en Bolsa" loading="lazy" />
+              <div class="img-overlay">
+                <button class="overlay-btn" aria-label="Vista rápida">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-category">Bolsa · Empaque</span>
+              <h3 class="card-title">En Bolsa</h3>
+              <div class="card-footer">
+                <span class="precio">15 Bs</span>
+                <button class="btn-add" aria-label="Agregar al carrito">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </a>
+      </div>
+    </main>
+
+    <!-- ══════════════════════════════════════════════
+         BANNER INFERIOR – PROPUESTA DE VALOR
+    ══════════════════════════════════════════════ -->
+    <section class="value-strip">
+      <div class="value-inner">
+        <div class="value-item">
+          <div class="value-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#0B78B3"
+              stroke-width="2"
+            >
+              <path d="M5 12l5 5L20 7" />
+            </svg>
+          </div>
+          <div>
+            <span class="value-title">Calidad Garantizada</span>
+            <span class="value-desc">Productos artesanales certificados</span>
+          </div>
+        </div>
+        <div class="value-divider"></div>
+        <div class="value-item">
+          <div class="value-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#0B78B3"
+              stroke-width="2"
+            >
+              <rect x="1" y="3" width="15" height="13" rx="2" />
+              <path d="M16 8h4l3 4v4h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div>
+            <span class="value-title">Entrega Rápida</span>
+            <span class="value-desc">En tu puerta en 24 horas</span>
+          </div>
+        </div>
+        <div class="value-divider"></div>
+        <div class="value-item">
+          <div class="value-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#0B78B3"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+          </div>
+          <div>
+            <span class="value-title">Soporte WhatsApp</span>
+            <span class="value-desc">Atención personalizada 7/7</span>
+          </div>
+        </div>
+        <div class="value-divider"></div>
+        <div class="value-item">
+          <div class="value-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#0B78B3"
+              stroke-width="2"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <div>
+            <span class="value-title">100% Ecológico</span>
+            <span class="value-desc">Cuidamos el medio ambiente</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-text">TIENDA VIRTUAL</span>
+          <p class="footer-tagline">Tu fuente de carbón ecológico premium.</p>
+        </div>
+
+        <p class="footer-copy">
+          © 2025 Tienda Virtual – Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <!-- ══════════════════════════════════════════════
+         BOTÓN FLOTANTE WHATSAPP
+    ══════════════════════════════════════════════ -->
+    <a
+      href="https://wa.me/59176908555?text=Hola%2C%20me%20interesa%20un%20producto"
+      id="btn-whatsapp"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Contactar por WhatsApp"
+    >
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 32 32"
+        fill="white"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M16.003 2.667C8.636 2.667 2.667 8.636 2.667 16c0 2.347.614 4.553 1.686 6.467L2.667 29.333l7.067-1.653A13.26 13.26 0 0016.003 29.333c7.364 0 13.33-5.97 13.33-13.333S23.367 2.667 16.003 2.667zm0 24.266a11.2 11.2 0 01-5.72-1.56l-.41-.243-4.197.983.997-4.09-.267-.423A11.18 11.18 0 014.8 16c0-6.18 5.023-11.2 11.2-11.2S27.2 9.82 27.2 16s-5.02 11.2-11.197 11.2v-.267zm6.14-8.373c-.337-.167-1.99-.98-2.3-1.093-.31-.113-.533-.167-.757.167-.22.333-.863 1.093-1.057 1.317-.193.22-.39.247-.727.08-.337-.167-1.42-.523-2.703-1.667-1-.89-1.673-1.99-1.87-2.327-.196-.337-.02-.52.147-.687.153-.153.337-.4.503-.6.167-.2.223-.333.333-.557.113-.22.057-.413-.027-.58-.083-.167-.757-1.82-1.037-2.493-.273-.653-.55-.563-.757-.573-.193-.01-.413-.013-.633-.013s-.58.08-.883.4c-.303.32-1.16 1.133-1.16 2.76s1.187 3.2 1.353 3.42c.167.22 2.337 3.567 5.66 5.003.793.34 1.41.543 1.89.697.793.253 1.517.217 2.087.133.637-.093 1.99-.813 2.27-1.597.28-.783.28-1.453.197-1.593-.08-.143-.3-.223-.633-.387z"
+        />
+      </svg>
+    </a>
+
+    <!-- ══════════════════════════════════════════════
+         MODAL — VISTA RÁPIDA DEL PRODUCTO
+         Oculto por defecto; JS lo muestra al pulsar
+         cualquier botón "Vista Rápida" del catálogo.
+    ══════════════════════════════════════════════ -->
+    <div
+      id="modal-vista-rapida"
+      class="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Vista rápida del producto"
+      aria-hidden="true"
+    >
+      <!-- Clic fuera del contenido → cierra el modal -->
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+
+      <div class="modal-contenido" id="modal-contenido">
+
+        <!-- Botón cerrar (X) -->
+        <button class="modal-cerrar" id="modal-cerrar" aria-label="Cerrar vista rápida">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6"  x2="6"  y2="18"/>
+            <line x1="6"  y1="6"  x2="18" y2="18"/>
+          </svg>
+        </button>
+
+        <!-- Columna izquierda — imagen grande -->
+        <div class="modal-img-col">
+          <div class="modal-img-frame">
+            <span class="modal-badge-img" id="modal-badge-img"></span>
+            <img id="modal-img" src="" alt="Foto del producto" />
+          </div>
+          <!-- Miniaturas (misma imagen repetida para simular galería) -->
+          <div class="modal-thumbs" id="modal-thumbs"></div>
+        </div>
+
+        <!-- Columna derecha — información -->
+        <div class="modal-info-col">
+
+          <span class="modal-categoria" id="modal-categoria">Categoría</span>
+          <h2  class="modal-titulo"    id="modal-titulo">Nombre del producto</h2>
+
+          <p class="modal-desc" id="modal-desc">
+            Producto artesanal de alta calidad, elaborado con materiales
+            100% ecológicos y libres de químicos.
+          </p>
+
+          <!-- Rating -->
+          <div class="modal-rating">
+            <span class="modal-stars">★★★★★</span>
+            <span class="modal-rating-val" id="modal-rating-val">4.9</span>
+            <span class="modal-rating-total">(128 reseñas)</span>
+          </div>
+
+          <!-- Precio -->
+          <div class="modal-precio-row">
+            <span class="modal-precio" id="modal-precio">— Bs</span>
+            <span class="modal-precio-unit">/ unidad</span>
+          </div>
+
+          <!-- Stock -->
+          <div class="modal-stock">
+            <span class="modal-stock-dot"></span>
+            <span>En stock · Envío en 24 h</span>
+          </div>
+
+          <!-- Selector de cantidad -->
+          <div class="modal-qty-row">
+            <span class="modal-qty-label">Cantidad</span>
+            <div class="modal-qty-ctrl">
+              <button class="modal-qty-btn" id="modal-qty-minus" aria-label="Disminuir">−</button>
+              <span class="modal-qty-display" id="modal-qty-display">1</span>
+              <button class="modal-qty-btn" id="modal-qty-plus"  aria-label="Aumentar">+</button>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="modal-actions">
+            <button class="modal-btn-agregar" id="modal-btn-agregar">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
+              Agregar al Carrito
+            </button>
+            <button class="modal-btn-wa" id="modal-btn-wa">
+              <svg width="17" height="17" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16.003 2.667C8.636 2.667 2.667 8.636 2.667 16c0 2.347.614 4.553 1.686 6.467L2.667 29.333l7.067-1.653A13.26 13.26 0 0016.003 29.333c7.364 0 13.33-5.97 13.33-13.333S23.367 2.667 16.003 2.667zm6.14 18.293c-.337-.167-1.99-.98-2.3-1.093-.31-.113-.533-.167-.757.167-.22.333-.863 1.093-1.057 1.317-.193.22-.39.247-.727.08-.337-.167-1.42-.523-2.703-1.667-1-.89-1.673-1.99-1.87-2.327-.196-.337-.02-.52.147-.687.153-.153.337-.4.503-.6.167-.2.223-.333.333-.557.113-.22.057-.413-.027-.58-.083-.167-.757-1.82-1.037-2.493-.273-.653-.55-.563-.757-.573-.193-.01-.413-.013-.633-.013s-.58.08-.883.4c-.303.32-1.16 1.133-1.16 2.76s1.187 3.2 1.353 3.42c.167.22 2.337 3.567 5.66 5.003.793.34 1.41.543 1.89.697.793.253 1.517.217 2.087.133.637-.093 1.99-.813 2.27-1.597.28-.783.28-1.453.197-1.593-.08-.143-.3-.223-.633-.387z"/>
+              </svg>
+              Consultar
+            </button>
+          </div>
+
+          <!-- Etiquetas de características -->
+          <div class="modal-tags">
+            <span class="modal-tag">🌿 100% Ecológico</span>
+            <span class="modal-tag">🚚 Envío 24 h</span>
+            <span class="modal-tag">⭐ Artesanal</span>
+          </div>
+
+        </div><!-- /modal-info-col -->
+      </div><!-- /modal-contenido -->
+    </div><!-- /modal-vista-rapida -->
+
+    <script src="script.js"></script>
+  </body>
+</html>
