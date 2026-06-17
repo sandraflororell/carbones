@@ -11,7 +11,7 @@
    ============================================================ */
 
 const WHATSAPP_NUMERO = "59176908555";
-const NOMBRE_TIENDA = "Tienda Virtual Carbón";
+const NOMBRE_TIENDA = "Tienda Virtual Carbones DARK";
 
 /* ============================================================
    🛒  ESTADO DEL CARRITO
@@ -105,24 +105,6 @@ function actualizarUICarrito() {
 
   if (btnFinalizar) {
     btnFinalizar.disabled = carrito.cantidad === 0;
-  }
-
-  // ── Calcular total monetario real y actualizar bloque QR ──
-  const totalMonetario = carrito.items.reduce((suma, item) => {
-    // precio tiene formato "110 Bs" — extraemos el número
-    const num = parseFloat(String(item.precio).replace(/[^\d.]/g, "")) || 0;
-    return suma + num * item.qty;
-  }, 0);
-
-  const qrMonto = document.getElementById("panel-qr-monto");
-  if (qrMonto) {
-    qrMonto.innerHTML = `Total a pagar: <strong>${totalMonetario.toFixed(2)} Bs</strong>`;
-  }
-
-  // Mostrar / ocultar el bloque QR según haya o no productos
-  const qrBlock = document.getElementById("panel-qr-block");
-  if (qrBlock) {
-    qrBlock.style.display = carrito.cantidad > 0 ? "flex" : "none";
   }
 
   const btnWA = document.getElementById("btn-whatsapp");
@@ -244,44 +226,6 @@ function crearPanelCarrito() {
         <p class="panel-resumen">
           Total de artículos: <strong id="panel-count-footer">0</strong>
         </p>
-
-        <!-- ── BOTÓN SEGUIR PIDIENDO ── -->
-        <button class="btn-seguir-pidiendo" id="btn-seguir-pidiendo" aria-label="Cerrar carrito y volver al catálogo">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-          SEGUIR PIDIENDO
-        </button>
-
-        <!-- ── SECCIÓN QR ── -->
-        <div class="panel-qr-block" id="panel-qr-block">
-          <p class="panel-qr-titulo">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px">
-              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-              <rect x="3" y="14" width="7" height="7" rx="1"/>
-              <path d="M14 14h2v2h-2zM18 14h3M14 18h3M20 18v3M20 14v2"/>
-            </svg>
-            Pago Rápido mediante QR
-          </p>
-
-          <div class="panel-qr-frame">
-            <img
-              id="panel-qr-img"
-              src="img/qr_pago.png"
-              alt="Código QR de pago"
-              onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://tiendavirtualcarbon.eco/pago&color=0d0c18&bgcolor=ffffff&margin=4'"
-            />
-          </div>
-
-          <p class="panel-qr-monto" id="panel-qr-monto">
-            Total a pagar: <strong>0 Bs</strong>
-          </p>
-
-          <p class="panel-qr-info">
-            Escanea desde tu app bancaria antes de enviar
-          </p>
-        </div>
-
         <button class="btn-finalizar" id="btn-finalizar-pedido" disabled>
           <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor">
             <path d="M16.003 2.667C8.636 2.667 2.667 8.636 2.667 16c0 2.347.614 4.553 1.686 6.467L2.667 29.333l7.067-1.653A13.26 13.26 0 0016.003 29.333c7.364 0 13.33-5.97 13.33-13.333S23.367 2.667 16.003 2.667zm6.14 18.293c-.337-.167-1.99-.98-2.3-1.093-.31-.113-.533-.167-.757.167-.22.333-.863 1.093-1.057 1.317-.193.22-.39.247-.727.08-.337-.167-1.42-.523-2.703-1.667-1-.89-1.673-1.99-1.87-2.327-.196-.337-.02-.52.147-.687.153-.153.337-.4.503-.6.167-.2.223-.333.333-.557.113-.22.057-.413-.027-.58-.083-.167-.757-1.82-1.037-2.493-.273-.653-.55-.563-.757-.573-.193-.01-.413-.013-.633-.013s-.58.08-.883.4c-.303.32-1.16 1.133-1.16 2.76s1.187 3.2 1.353 3.42c.167.22 2.337 3.567 5.66 5.003.793.34 1.41.543 1.89.697.793.253 1.517.217 2.087.133.637-.093 1.99-.813 2.27-1.597.28-.783.28-1.453.197-1.593-.08-.143-.3-.223-.633-.387z"/>
@@ -300,24 +244,6 @@ function crearPanelCarrito() {
   document
     .getElementById("panel-cerrar")
     .addEventListener("click", cerrarPanelCarrito);
-
-  // Botón "SEGUIR PIDIENDO": cierra el panel y hace scroll al catálogo
-  document
-    .getElementById("btn-seguir-pidiendo")
-    .addEventListener("click", () => {
-      cerrarPanelCarrito();
-
-      // Pequeño delay para que el drawer termine su animación de cierre antes del scroll
-      setTimeout(() => {
-        const seccionCatalogo = document.getElementById("catalogo");
-        if (seccionCatalogo) {
-          seccionCatalogo.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      }, 320);
-    });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
@@ -569,7 +495,7 @@ function abrirModalVistaRapida(tarjeta) {
 
   // URL personalizada del botón WhatsApp del modal
   const msgWA = encodeURIComponent(
-    `¡Hola ${NOMBRE_TIENDA}! 👋 Quiero confirmar mi pedido: *${titulo}* (${precio}). ¿Está disponible?`,
+    `¡Hola ${NOMBRE_TIENDA}! 👋 Me interesa el producto: *${titulo}* (${precio}). ¿Está disponible?`,
   );
   document.getElementById("modal-btn-wa").onclick = () =>
     window.open(

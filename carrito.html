@@ -1206,8 +1206,36 @@
       const ENVIO_FIJO = 15; // Bs
       const IMP_TASA = 0.13; // 13 %
 
-      // CORRECCIÓN: Se inicializa el arreglo completamente vacío para que no cargue productos falsos por defecto
-      let productos = [];
+      let productos = [
+        {
+          id: 1,
+          nombre: "Carbón en Gangocho Vegetal",
+          categoria: "Gangocho · Vegetal",
+          precio: 110,
+          qty: 1,
+          img: "img/carbon_vegetal_gangocho.png",
+          imgFallback:
+            "https://placehold.co/90x90/262336/40ffbf?text=C.Vegetal",
+        },
+        {
+          id: 2,
+          nombre: "Carbón en Gangocho Ecológico",
+          categoria: "Gangocho · Ecológico",
+          precio: 120,
+          qty: 2,
+          img: "img/gangocho_ecologico.png",
+          imgFallback: "https://placehold.co/90x90/262336/40ffbf?text=C.Eco",
+        },
+        {
+          id: 3,
+          nombre: "Papel Mediano Vegetal",
+          categoria: "Papel · Vegetal",
+          precio: 20,
+          qty: 1,
+          img: "img/carbon_papel_vegetal.png",
+          imgFallback: "https://placehold.co/90x90/262336/40ffbf?text=Papel",
+        },
+      ];
 
       /* ─── RENDER COMPLETO ─── */
       function render() {
@@ -1344,19 +1372,26 @@
 
       /* ─── CONFIRMAR PAGO ─── */
       function confirmarPago() {
+        // 1. Generar referencia aleatoria de transacción
         const ref =
           "TXN-ECO-" + Math.random().toString(36).slice(2, 8).toUpperCase();
         document.getElementById("pago-id-ref").textContent = ref;
 
+        // 2. Mostrar el modal de éxito en pantalla
         document.getElementById("pago-overlay").classList.add("visible");
 
-        // Al confirmar el pago, vaciamos el carrito inmediatamente
+        // 3. ¡VACIAR EL CARRITO AQUÍ! (Para que empiece desde cero inmediatamente)
         productos = [];
+
+        // 4. Refrescar la interfaz para que muestre "Tu carrito está vacío" tras bambalinas
         render();
       }
 
       function cerrarModal() {
+        // Ocultar el modal de confirmación
         document.getElementById("pago-overlay").classList.remove("visible");
+
+        // Lanzar el aviso final al cliente
         mostrarToast("¡Pedido confirmado! Gracias por tu compra 🎉");
       }
 
@@ -1364,6 +1399,7 @@
       function volverTienda() {
         mostrarToast("Regresando a la tienda…");
         setTimeout(() => {
+          // Si index.html está en la misma carpeta, navegamos; si no, toast informativo
           if (window.location.pathname.includes("carrito")) {
             window.location.href = "index.html";
           }
@@ -1406,8 +1442,6 @@
       }
 
       /* ─── INICIO ─── */
-      // CORRECCIÓN: Aseguramos limpiar cualquier historial residual justo antes de renderizar la página
-      productos = [];
       render();
     </script>
   </body>
