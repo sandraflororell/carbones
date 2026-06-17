@@ -422,6 +422,91 @@
       }
 
       /* ═══════════════════════════════════════════════
+       ESTADO VACÍO — PANTALLA COMPLETA
+    ═══════════════════════════════════════════════ */
+      .vacio-hero {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.4rem;
+        min-height: 58vh;
+        text-align: center;
+        padding: 3rem 2rem;
+        grid-column: 1 / -1;
+      }
+      .vacio-hero.visible { display: flex; }
+
+      .vacio-icono {
+        width: 96px; height: 96px;
+        background: var(--accent-dim);
+        border: 2px dashed rgba(64,255,191,.35);
+        border-radius: 50%;
+        display: grid; place-items: center;
+        opacity: .55;
+      }
+
+      .vacio-titulo {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -.5px;
+      }
+
+      .vacio-sub {
+        font-size: .95rem;
+        color: var(--text-muted);
+        max-width: 360px;
+      }
+
+      .btn-ir-tienda {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        padding: .9rem 2.2rem;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--r-md);
+        color: #0d0c18;
+        font-size: .95rem;
+        font-weight: 800;
+        letter-spacing: .3px;
+        transition: var(--t);
+        box-shadow: 0 4px 20px var(--accent-glow);
+        margin-top: .5rem;
+      }
+      .btn-ir-tienda:hover {
+        background: #62ffe8;
+        box-shadow: 0 6px 28px rgba(64,255,191,.5);
+        transform: translateY(-2px);
+      }
+      .btn-ir-tienda:active { transform: scale(.97); }
+
+      /* ── Footer total fijo ── */
+      .footer-total {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: rgba(30,27,41,.95);
+        backdrop-filter: blur(14px);
+        border-top: 1px solid var(--border);
+        padding: .9rem 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .6rem;
+        z-index: 40;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-muted);
+      }
+      .footer-total span {
+        color: var(--accent);
+        font-size: 1.25rem;
+        text-shadow: 0 0 14px var(--accent-glow);
+      }
+
+      /* ═══════════════════════════════════════════════
        COLUMNA DERECHA — CHECKOUT + QR
     ═══════════════════════════════════════════════ */
       .col-checkout {
@@ -866,7 +951,28 @@
     </header>
 
     <!-- ════════════════ LAYOUT ════════════════ -->
-    <div class="page-wrapper">
+    <div class="page-wrapper" id="page-wrapper">
+
+      <!-- ══════ ESTADO VACÍO (pantalla completa) ══════ -->
+      <div class="vacio-hero" id="vacio-hero">
+        <div class="vacio-icono">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+               stroke="#40ffbf" stroke-width="1.4">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+        </div>
+        <h1 class="vacio-titulo">TU CARRITO ESTÁ VACÍO</h1>
+        <p class="vacio-sub">Parece que aún no has añadido nada a tu pedido.</p>
+        <button class="btn-ir-tienda" onclick="seguirPidiendo()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+          IR A LA TIENDA
+        </button>
+      </div>
       <!-- ══════ COLUMNA IZQUIERDA ══════ -->
       <section class="col-carrito">
         <div class="col-header">
@@ -1167,6 +1273,11 @@
     </div>
     <!-- /page-wrapper -->
 
+    <!-- ════════════════ FOOTER TOTAL FIJO ════════════════ -->
+    <div class="footer-total" id="footer-total">
+      Total a Pagar: <span id="footer-total-val">0.00 Bs</span>
+    </div>
+
     <!-- ════════════════ MODAL PAGO RECIBIDO ════════════════ -->
     <div class="pago-overlay" id="pago-overlay">
       <div class="pago-modal">
@@ -1206,52 +1317,34 @@
       const ENVIO_FIJO = 15; // Bs
       const IMP_TASA = 0.13; // 13 %
 
-      let productos = [
-        {
-          id: 1,
-          nombre: "Carbón en Gangocho Vegetal",
-          categoria: "Gangocho · Vegetal",
-          precio: 110,
-          qty: 1,
-          img: "img/carbon_vegetal_gangocho.png",
-          imgFallback:
-            "https://placehold.co/90x90/262336/40ffbf?text=C.Vegetal",
-        },
-        {
-          id: 2,
-          nombre: "Carbón en Gangocho Ecológico",
-          categoria: "Gangocho · Ecológico",
-          precio: 120,
-          qty: 2,
-          img: "img/gangocho_ecologico.png",
-          imgFallback: "https://placehold.co/90x90/262336/40ffbf?text=C.Eco",
-        },
-        {
-          id: 3,
-          nombre: "Papel Mediano Vegetal",
-          categoria: "Papel · Vegetal",
-          precio: 20,
-          qty: 1,
-          img: "img/carbon_papel_vegetal.png",
-          imgFallback: "https://placehold.co/90x90/262336/40ffbf?text=Papel",
-        },
-      ];
+      let productos = [];
 
       /* ─── RENDER COMPLETO ─── */
       function render() {
-        const lista = document.getElementById("item-list");
-        const vacio = document.getElementById("carrito-vacio");
-        const resumen = document.getElementById("resumen-card");
+        const lista    = document.getElementById("item-list");
+        const vacio    = document.getElementById("carrito-vacio");
+        const vacioHero = document.getElementById("vacio-hero");
+        const resumen  = document.getElementById("resumen-card");
+        const colLeft  = document.querySelector(".col-carrito");
+        const colRight = document.querySelector(".col-checkout");
 
         lista.innerHTML = "";
 
         if (productos.length === 0) {
-          vacio.classList.add("visible");
+          // Mostrar pantalla vacía central
+          vacioHero.classList.add("visible");
+          vacio.classList.remove("visible");
           resumen.style.display = "none";
+          colLeft.style.display  = "none";
+          colRight.style.display = "none";
           actualizarTotales();
           return;
         }
 
+        // Ocultar pantalla vacía, mostrar columnas
+        vacioHero.classList.remove("visible");
+        colLeft.style.display  = "";
+        colRight.style.display = "";
         vacio.classList.remove("visible");
         resumen.style.display = "";
 
@@ -1299,25 +1392,23 @@
 
       /* ─── CALCULAR Y MOSTRAR TOTALES ─── */
       function actualizarTotales() {
-        const subtotal = productos.reduce((s, p) => s + p.precio * p.qty, 0);
-        const envio = productos.length > 0 ? ENVIO_FIJO : 0;
-        const impuestos = subtotal * IMP_TASA;
-        const total = subtotal + envio;
+        const subtotal   = productos.reduce((s, p) => s + p.precio * p.qty, 0);
+        const envio      = productos.length > 0 ? ENVIO_FIJO : 0;
+        const total      = subtotal + envio;
         const totalItems = productos.reduce((s, p) => s + p.qty, 0);
 
-        // Resumen textual
         document.getElementById("resumen-cantidad").textContent =
           totalItems === 0
             ? "Tu carrito está vacío"
             : `${totalItems} artículo${totalItems !== 1 ? "s" : ""} en tu pedido`;
 
-        set("val-subtotal", `${subtotal.toFixed(0)} Bs`);
-        set("val-envio", `${envio.toFixed(0)} Bs`);
-        set("val-total", `${total.toFixed(2)} Bs`);
-        set("qr-total", `${total.toFixed(2)} Bs`);
-        set("transfer-total", `${total.toFixed(2)} Bs`);
+        set("val-subtotal",    `${subtotal.toFixed(0)} Bs`);
+        set("val-envio",       `${envio.toFixed(0)} Bs`);
+        set("val-total",       `${total.toFixed(2)} Bs`);
+        set("qr-total",        `${total.toFixed(2)} Bs`);
+        set("transfer-total",  `${total.toFixed(2)} Bs`);
+        set("footer-total-val",`${total.toFixed(2)} Bs`);
 
-        // Habilitar / deshabilitar botones de confirmar pago
         const disabled = productos.length === 0;
         ["btn-confirmar-qr", "btn-confirmar-transfer"].forEach((id) => {
           const btn = document.getElementById(id);

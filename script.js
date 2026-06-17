@@ -209,6 +209,19 @@ function crearPanelCarrito() {
         </button>
       </header>
 
+      <!-- ── QR de WhatsApp ── -->
+      <div class="panel-qr-wrap">
+        <p class="panel-qr-label">Pago rápido · Escanea el QR</p>
+        <div class="panel-qr-frame">
+          <img src="img/qr.jpeg" alt="Código QR de pago WhatsApp"
+               onerror="this.style.display='none'" />
+          <span class="qr-c tl"></span>
+          <span class="qr-c tr"></span>
+          <span class="qr-c bl"></span>
+          <span class="qr-c br"></span>
+        </div>
+      </div>
+
       <div class="panel-cuerpo">
         <div class="panel-vacio" id="panel-vacio">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35">
@@ -220,6 +233,18 @@ function crearPanelCarrito() {
           <span>Agrega productos del catálogo ↗</span>
         </div>
         <ul class="panel-lista" id="panel-lista"></ul>
+      </div>
+
+      <!-- ── Botón SEGUIR PIDIENDO ── -->
+      <div class="panel-seguir-wrap">
+        <button class="btn-seguir-pidiendo" id="btn-seguir-pidiendo"
+                onclick="cerrarPanelCarrito()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+          SEGUIR PIDIENDO
+        </button>
       </div>
 
       <footer class="panel-footer">
@@ -598,6 +623,100 @@ function iniciarModalVistaRapida() {
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ── Estilos del panel QR + botón SEGUIR PIDIENDO ──
+  const s = document.createElement("style");
+  s.textContent = `
+    /* ── QR en el panel ── */
+    .panel-qr-wrap {
+      padding: .85rem 1.1rem .6rem;
+      border-bottom: 1px solid rgba(66,61,120,.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .55rem;
+      background: rgba(64,255,191,.04);
+    }
+    .panel-qr-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #7d789e;
+    }
+    .panel-qr-frame {
+      position: relative;
+      width: 120px; height: 120px;
+      background: #fff;
+      border-radius: 10px;
+      border: 2px solid #40ffbf;
+      box-shadow: 0 0 18px rgba(64,255,191,.35), 0 0 6px rgba(64,255,191,.2);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .panel-qr-frame img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* esquinas decorativas */
+    .qr-c {
+      position: absolute;
+      width: 14px; height: 14px;
+      border-color: #40ffbf;
+      border-style: solid;
+    }
+    .qr-c.tl { top:-1px; left:-1px;   border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+    .qr-c.tr { top:-1px; right:-1px;  border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+    .qr-c.bl { bottom:-1px; left:-1px;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+    .qr-c.br { bottom:-1px; right:-1px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+    /* ── Botón SEGUIR PIDIENDO ── */
+    .panel-seguir-wrap {
+      padding: .7rem 1.1rem;
+      border-top: 1px solid rgba(66,61,120,.4);
+    }
+    .btn-seguir-pidiendo {
+      width: 100%;
+      padding: .72rem 1rem;
+      background: #16a34a;
+      border: 2px solid #22c55e;
+      border-radius: 10px;
+      color: #d1fae5;
+      font-size: .88rem;
+      font-weight: 800;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .22s, box-shadow .22s, transform .18s;
+      box-shadow:
+        0 0 12px rgba(34,197,94,.55),
+        0 0 28px rgba(34,197,94,.28),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      animation: neonPulse 2.4s ease-in-out infinite;
+    }
+    .btn-seguir-pidiendo:hover {
+      background: #15803d;
+      box-shadow:
+        0 0 20px rgba(34,197,94,.75),
+        0 0 44px rgba(34,197,94,.40);
+      transform: translateY(-2px);
+      animation: none;
+    }
+    .btn-seguir-pidiendo:active { transform: scale(.97); }
+    @keyframes neonPulse {
+      0%,100% { box-shadow: 0 0 12px rgba(34,197,94,.55), 0 0 28px rgba(34,197,94,.28); }
+      50%      { box-shadow: 0 0 20px rgba(34,197,94,.80), 0 0 48px rgba(34,197,94,.45); }
+    }
+  `;
+  document.head.appendChild(s);
+
   iniciarBadgeCarrito(); // Badge dinámico que comienza en 0
   crearPanelCarrito(); // Inyecta el drawer lateral en el DOM
   iniciarBotonesAgregar(); // Captura clics en .btn-add
