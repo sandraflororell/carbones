@@ -4,15 +4,14 @@
  * Tarjetas clickables · Animaciones de entrada
  */
 
-'use strict';
+"use strict";
 
 /* ============================================================
    ⚙️  CONFIGURACIÓN GLOBAL
    ============================================================ */
 
-const WHATSAPP_NUMERO = '59176908555';
-const NOMBRE_TIENDA   = 'Tienda Virtual Carbón ECO';
-
+const WHATSAPP_NUMERO = "59176908555";
+const NOMBRE_TIENDA = "Tienda Virtual Carbones DARK";
 
 /* ============================================================
    🛒  ESTADO DEL CARRITO
@@ -22,7 +21,6 @@ const carrito = {
   cantidad: 0,
   items: [],
 };
-
 
 /* ============================================================
    UTILIDADES — WHATSAPP
@@ -39,11 +37,11 @@ function construirUrlWhatsapp() {
   } else {
     const detalle = carrito.items
       .map((item) => `  • ${item.nombre} x${item.qty} — ${item.precio}`)
-      .join('\n');
+      .join("\n");
 
     mensaje =
       `¡Hola ${NOMBRE_TIENDA}! 🛒 Quiero coordinar mi pedido de ` +
-      `*${carrito.cantidad} artículo${carrito.cantidad !== 1 ? 's' : ''}* ` +
+      `*${carrito.cantidad} artículo${carrito.cantidad !== 1 ? "s" : ""}* ` +
       `surtidos que agregué al carrito:\n\n${detalle}\n\n` +
       `Por favor, indíquenme disponibilidad y cómo proceder. ¡Gracias!`;
   }
@@ -51,30 +49,31 @@ function construirUrlWhatsapp() {
   return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
 }
 
-
 /* ============================================================
    UTILIDADES — CARRITO UI
    ============================================================ */
 
 function actualizarUICarrito() {
-  const badge = document.getElementById('cart-badge-count');
+  const badge = document.getElementById("cart-badge-count");
   if (badge) {
     badge.textContent = carrito.cantidad;
-    badge.style.display = carrito.cantidad > 0 ? 'grid' : 'none';
-    badge.classList.remove('badge-bounce');
+    badge.style.display = carrito.cantidad > 0 ? "grid" : "none";
+    badge.classList.remove("badge-bounce");
     void badge.offsetWidth;
-    badge.classList.add('badge-bounce');
+    badge.classList.add("badge-bounce");
   }
 
-  const panelContador = document.getElementById('panel-count');
-  const panelLista    = document.getElementById('panel-lista');
-  const panelVacio    = document.getElementById('panel-vacio');
-  const btnFinalizar  = document.getElementById('btn-finalizar-pedido');
+  const panelContador = document.getElementById("panel-count");
+  const panelLista = document.getElementById("panel-lista");
+  const panelVacio = document.getElementById("panel-vacio");
+  const btnFinalizar = document.getElementById("btn-finalizar-pedido");
 
   if (panelContador) panelContador.textContent = carrito.cantidad;
 
   if (panelLista) {
-    panelLista.innerHTML = carrito.items.map((item) => `
+    panelLista.innerHTML = carrito.items
+      .map(
+        (item) => `
       <li class="panel-item">
         <span class="panel-item-nombre">${item.nombre}</span>
         <span class="panel-item-meta">${item.precio}</span>
@@ -84,25 +83,31 @@ function actualizarUICarrito() {
           <button class="panel-btn-mas"  data-nombre="${item.nombre}" aria-label="Agregar uno">+</button>
         </div>
       </li>
-    `).join('');
+    `,
+      )
+      .join("");
 
-    panelLista.querySelectorAll('.panel-btn-menos').forEach((btn) => {
-      btn.addEventListener('click', () => modificarCantidad(btn.dataset.nombre, -1));
+    panelLista.querySelectorAll(".panel-btn-menos").forEach((btn) => {
+      btn.addEventListener("click", () =>
+        modificarCantidad(btn.dataset.nombre, -1),
+      );
     });
-    panelLista.querySelectorAll('.panel-btn-mas').forEach((btn) => {
-      btn.addEventListener('click', () => modificarCantidad(btn.dataset.nombre, +1));
+    panelLista.querySelectorAll(".panel-btn-mas").forEach((btn) => {
+      btn.addEventListener("click", () =>
+        modificarCantidad(btn.dataset.nombre, +1),
+      );
     });
   }
 
   if (panelVacio) {
-    panelVacio.style.display = carrito.cantidad === 0 ? 'flex' : 'none';
+    panelVacio.style.display = carrito.cantidad === 0 ? "flex" : "none";
   }
 
   if (btnFinalizar) {
     btnFinalizar.disabled = carrito.cantidad === 0;
   }
 
-  const btnWA = document.getElementById('btn-whatsapp');
+  const btnWA = document.getElementById("btn-whatsapp");
   if (btnWA) btnWA.href = construirUrlWhatsapp();
 }
 
@@ -121,7 +126,7 @@ function modificarCantidad(nombre, delta) {
   const item = carrito.items.find((i) => i.nombre === nombre);
   if (!item) return;
 
-  item.qty       += delta;
+  item.qty += delta;
   carrito.cantidad += delta;
 
   if (item.qty <= 0) {
@@ -132,56 +137,56 @@ function modificarCantidad(nombre, delta) {
   actualizarUICarrito();
 }
 
-
 /* ============================================================
    1. BADGE DEL CARRITO (inicia en 0)
    ============================================================ */
 
 function iniciarBadgeCarrito() {
-  const badge = document.querySelector('.cart-badge');
+  const badge = document.querySelector(".cart-badge");
   if (!badge) return;
 
-  badge.id            = 'cart-badge-count';
-  badge.textContent   = '0';
-  badge.style.display = 'none';
+  badge.id = "cart-badge-count";
+  badge.textContent = "0";
+  badge.style.display = "none";
 }
-
 
 /* ============================================================
    2. BOTONES "AGREGAR AL CARRITO" (.btn-add)
    ============================================================ */
 
 function iniciarBotonesAgregar() {
-  document.querySelectorAll('.btn-add').forEach((boton) => {
-    boton.addEventListener('click', (e) => {
+  document.querySelectorAll(".btn-add").forEach((boton) => {
+    boton.addEventListener("click", (e) => {
       e.stopPropagation();
       e.preventDefault();
 
-      const tarjeta = boton.closest('.card-producto');
-      const nombre  = tarjeta?.querySelector('.card-title')?.textContent?.trim() || 'Producto';
-      const precio  = tarjeta?.querySelector('.precio')?.textContent?.trim()     || '';
+      const tarjeta = boton.closest(".card-producto");
+      const nombre =
+        tarjeta?.querySelector(".card-title")?.textContent?.trim() ||
+        "Producto";
+      const precio =
+        tarjeta?.querySelector(".precio")?.textContent?.trim() || "";
 
       agregarAlCarrito(nombre, precio);
 
-      boton.classList.add('btn-add--activo');
-      setTimeout(() => boton.classList.remove('btn-add--activo'), 380);
+      boton.classList.add("btn-add--activo");
+      setTimeout(() => boton.classList.remove("btn-add--activo"), 380);
 
       abrirPanelCarrito();
     });
   });
 }
 
-
 /* ============================================================
    3. PANEL LATERAL DEL CARRITO
    ============================================================ */
 
 function crearPanelCarrito() {
-  const panel = document.createElement('aside');
-  panel.id = 'panel-carrito';
-  panel.setAttribute('role',       'dialog');
-  panel.setAttribute('aria-modal', 'true');
-  panel.setAttribute('aria-label', 'Carrito de pedidos');
+  const panel = document.createElement("aside");
+  panel.id = "panel-carrito";
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-modal", "true");
+  panel.setAttribute("aria-label", "Carrito de pedidos");
 
   panel.innerHTML = `
     <div class="panel-overlay" id="panel-overlay"></div>
@@ -204,6 +209,19 @@ function crearPanelCarrito() {
         </button>
       </header>
 
+      <!-- ── QR de WhatsApp ── -->
+      <div class="panel-qr-wrap">
+        <p class="panel-qr-label">Pago rápido · Escanea el QR</p>
+        <div class="panel-qr-frame">
+          <img src="img/qr.jpeg" alt="Código QR de pago WhatsApp"
+               onerror="this.style.display='none'" />
+          <span class="qr-c tl"></span>
+          <span class="qr-c tr"></span>
+          <span class="qr-c bl"></span>
+          <span class="qr-c br"></span>
+        </div>
+      </div>
+
       <div class="panel-cuerpo">
         <div class="panel-vacio" id="panel-vacio">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35">
@@ -215,6 +233,18 @@ function crearPanelCarrito() {
           <span>Agrega productos del catálogo ↗</span>
         </div>
         <ul class="panel-lista" id="panel-lista"></ul>
+      </div>
+
+      <!-- ── Botón SEGUIR PIDIENDO ── -->
+      <div class="panel-seguir-wrap">
+        <button class="btn-seguir-pidiendo" id="btn-seguir-pidiendo"
+                onclick="cerrarPanelCarrito()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+          SEGUIR PIDIENDO
+        </button>
       </div>
 
       <footer class="panel-footer">
@@ -233,102 +263,108 @@ function crearPanelCarrito() {
 
   document.body.appendChild(panel);
 
-  document.getElementById('panel-overlay').addEventListener('click', cerrarPanelCarrito);
-  document.getElementById('panel-cerrar').addEventListener('click', cerrarPanelCarrito);
+  document
+    .getElementById("panel-overlay")
+    .addEventListener("click", cerrarPanelCarrito);
+  document
+    .getElementById("panel-cerrar")
+    .addEventListener("click", cerrarPanelCarrito);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
       cerrarPanelCarrito();
       cerrarModalVistaRapida();
     }
   });
 
-  document.getElementById('btn-finalizar-pedido').addEventListener('click', () => {
-    if (carrito.cantidad === 0) return;
-    window.open(construirUrlWhatsapp(), '_blank', 'noopener,noreferrer');
-  });
+  document
+    .getElementById("btn-finalizar-pedido")
+    .addEventListener("click", () => {
+      if (carrito.cantidad === 0) return;
+      window.open(construirUrlWhatsapp(), "_blank", "noopener,noreferrer");
+    });
 
-  const panelCount = document.getElementById('panel-count');
+  const panelCount = document.getElementById("panel-count");
   new MutationObserver(() => {
-    const footer = document.getElementById('panel-count-footer');
+    const footer = document.getElementById("panel-count-footer");
     if (footer && panelCount) footer.textContent = panelCount.textContent;
   }).observe(panelCount, { childList: true });
 }
 
 function abrirPanelCarrito() {
-  document.getElementById('panel-carrito')?.classList.add('panel-abierto');
-  document.body.style.overflow = 'hidden';
+  document.getElementById("panel-carrito")?.classList.add("panel-abierto");
+  document.body.style.overflow = "hidden";
 }
 
 function cerrarPanelCarrito() {
-  document.getElementById('panel-carrito')?.classList.remove('panel-abierto');
-  if (!document.getElementById('modal-vista-rapida')?.classList.contains('modal-abierto')) {
-    document.body.style.overflow = '';
+  document.getElementById("panel-carrito")?.classList.remove("panel-abierto");
+  if (
+    !document
+      .getElementById("modal-vista-rapida")
+      ?.classList.contains("modal-abierto")
+  ) {
+    document.body.style.overflow = "";
   }
 }
 
 function iniciarBotonHeaderCarrito() {
   const btn = document.querySelector('.icon-btn[aria-label="Carrito"]');
   if (!btn) return;
-  btn.addEventListener('click', (e) => {
+  btn.addEventListener("click", (e) => {
     e.preventDefault();
     abrirPanelCarrito();
   });
 }
-
 
 /* ============================================================
    4. BOTÓN FLOTANTE WHATSAPP
    ============================================================ */
 
 function iniciarBotonWhatsapp() {
-  const btn = document.getElementById('btn-whatsapp');
+  const btn = document.getElementById("btn-whatsapp");
   if (!btn) return;
 
-  btn.target = '_blank';
-  btn.rel    = 'noopener noreferrer';
+  btn.target = "_blank";
+  btn.rel = "noopener noreferrer";
 
-  btn.addEventListener('click', (e) => {
+  btn.addEventListener("click", (e) => {
     e.preventDefault();
-    window.open(construirUrlWhatsapp(), '_blank', 'noopener,noreferrer');
+    window.open(construirUrlWhatsapp(), "_blank", "noopener,noreferrer");
   });
 
   btn.href = construirUrlWhatsapp();
 }
-
 
 /* ============================================================
    5. TARJETAS CLICKABLES
    ============================================================ */
 
 function iniciarTarjetasClickables() {
-  document.querySelectorAll('.card-link .card-producto').forEach((tarjeta) => {
-    tarjeta.style.cursor = 'pointer';
+  document.querySelectorAll(".card-link .card-producto").forEach((tarjeta) => {
+    tarjeta.style.cursor = "pointer";
 
-    tarjeta.addEventListener('click', (e) => {
-      if (e.target.closest('button')) return;
+    tarjeta.addEventListener("click", (e) => {
+      if (e.target.closest("button")) return;
 
-      const url = tarjeta.closest('.card-link')?.getAttribute('href');
-      if (url && url !== '#') window.location.href = url;
+      const url = tarjeta.closest(".card-link")?.getAttribute("href");
+      if (url && url !== "#") window.location.href = url;
     });
   });
 }
-
 
 /* ============================================================
    6. CHIPS DE CATEGORÍA
    ============================================================ */
 
 function iniciarChipsCategorias() {
-  const chips = document.querySelectorAll('.cat-chip');
+  const chips = document.querySelectorAll(".cat-chip");
   chips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      chips.forEach((c) => c.classList.remove('active'));
-      chip.classList.add('active');
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
     });
   });
 }
-
 
 /* ============================================================
    7. ANIMACIÓN DE ENTRADA — Intersection Observer
@@ -336,13 +372,13 @@ function iniciarChipsCategorias() {
 
 function iniciarAnimacionEntrada() {
   const elementos = document.querySelectorAll(
-    '.card-link, .value-item, .hero-stats .stat'
+    ".card-link, .value-item, .hero-stats .stat",
   );
 
   elementos.forEach((el) => {
-    el.style.opacity    = '0';
-    el.style.transform  = 'translateY(28px)';
-    el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+    el.style.opacity = "0";
+    el.style.transform = "translateY(28px)";
+    el.style.transition = "opacity 0.55s ease, transform 0.55s ease";
   });
 
   const observer = new IntersectionObserver(
@@ -350,19 +386,18 @@ function iniciarAnimacionEntrada() {
       entradas.forEach((entrada, i) => {
         if (entrada.isIntersecting) {
           setTimeout(() => {
-            entrada.target.style.opacity   = '1';
-            entrada.target.style.transform = 'translateY(0)';
+            entrada.target.style.opacity = "1";
+            entrada.target.style.transform = "translateY(0)";
           }, i * 60);
           observer.unobserve(entrada.target);
         }
       });
     },
-    { threshold: 0.12 }
+    { threshold: 0.12 },
   );
 
   elementos.forEach((el) => observer.observe(el));
 }
-
 
 /* ============================================================
    8. MODAL — VISTA RÁPIDA
@@ -372,29 +407,32 @@ function iniciarAnimacionEntrada() {
 
 /** Descripciones enriquecidas por producto */
 const DESCRIPCIONES_PRODUCTO = {
-  'En Gangocho Vegetal':
-    'Carbón vegetal de alta pureza envasado en gangocho artesanal. Quema limpia, larga duración y sin humo excesivo. Ideal para asados, hornos y uso profesional.',
-  'En Gangocho Ecológico':
-    'Variante ecológica certificada, elaborada sin químicos ni aditivos. Empaque en gangocho biodegradable. La opción más responsable del catálogo.',
-  'Papel Mediano Vegetal':
-    'Carbón en papel mediano de origen 100 % vegetal. Encendido rápido y temperatura estable. Perfecto para parrillas domésticas y braseros.',
-  'Papel Mediano Ecológico':
-    'Versión ecológica del papel mediano. Fabricación artesanal que respeta el medioambiente. Certificado libre de tóxicos y aditivos artificiales.',
-  'Papel Pequeño':
-    'Presentación compacta en papel. Precio económico con la misma calidad artesanal. Ideal para uso personal, camping o muestras de producto.',
-  'En Bolsa':
-    'Carbón en bolsa resistente para fácil transporte y almacenamiento. Presentación estándar apta para todo tipo de uso doméstico e industrial.',
+  "En Gangocho Vegetal":
+    "Carbón vegetal de alta pureza envasado en gangocho artesanal. Quema limpia, larga duración y sin humo excesivo. Ideal para asados, hornos y uso profesional.",
+  "En Gangocho Ecológico":
+    "Variante ecológica certificada, elaborada sin químicos ni aditivos. Empaque en gangocho biodegradable. La opción más responsable del catálogo.",
+  "Papel Mediano Vegetal":
+    "Carbón en papel mediano de origen 100 % vegetal. Encendido rápido y temperatura estable. Perfecto para parrillas domésticas y braseros.",
+  "Papel Mediano Ecológico":
+    "Versión ecológica del papel mediano. Fabricación artesanal que respeta el medioambiente. Certificado libre de tóxicos y aditivos artificiales.",
+  "Papel Pequeño":
+    "Presentación compacta en papel. Precio económico con la misma calidad artesanal. Ideal para uso personal, camping o muestras de producto.",
+  "En Bolsa":
+    "Carbón en bolsa resistente para fácil transporte y almacenamiento. Presentación estándar apta para todo tipo de uso doméstico e industrial.",
 };
 
 /** Ratings por producto */
 const RATINGS_PRODUCTO = {
-  'En Gangocho Vegetal': 4.9, 'En Gangocho Ecológico': 4.8,
-  'Papel Mediano Vegetal': 4.7, 'Papel Mediano Ecológico': 4.8,
-  'Papel Pequeño': 4.6, 'En Bolsa': 4.7,
+  "En Gangocho Vegetal": 4.9,
+  "En Gangocho Ecológico": 4.8,
+  "Papel Mediano Vegetal": 4.7,
+  "Papel Mediano Ecológico": 4.8,
+  "Papel Pequeño": 4.6,
+  "En Bolsa": 4.7,
 };
 
-let modalCantidad       = 1;
-let modalProductoActivo = { nombre: '', precio: '' };
+let modalCantidad = 1;
+let modalProductoActivo = { nombre: "", precio: "" };
 
 /**
  * Rellena el modal con los datos de la tarjeta clicada y lo muestra.
@@ -402,68 +440,72 @@ let modalProductoActivo = { nombre: '', precio: '' };
  */
 function abrirModalVistaRapida(tarjeta) {
   // Extraer datos de la tarjeta
-  const imgEl    = tarjeta.querySelector('.producto-img img');
-  const titulo   = tarjeta.querySelector('.card-title')?.textContent?.trim()    || 'Producto';
-  const precio   = tarjeta.querySelector('.precio')?.textContent?.trim()        || '';
-  const categoria= tarjeta.querySelector('.card-category')?.textContent?.trim() || '';
-  const badgeEl  = tarjeta.querySelector('.card-badge');
-  const badgeTxt = badgeEl?.textContent?.trim() || '';
-  const esEco    = badgeEl?.classList.contains('eco') || false;
+  const imgEl = tarjeta.querySelector(".producto-img img");
+  const titulo =
+    tarjeta.querySelector(".card-title")?.textContent?.trim() || "Producto";
+  const precio = tarjeta.querySelector(".precio")?.textContent?.trim() || "";
+  const categoria =
+    tarjeta.querySelector(".card-category")?.textContent?.trim() || "";
+  const badgeEl = tarjeta.querySelector(".card-badge");
+  const badgeTxt = badgeEl?.textContent?.trim() || "";
+  const esEco = badgeEl?.classList.contains("eco") || false;
 
   // Imagen con fade
-  const modalImg = document.getElementById('modal-img');
-  modalImg.classList.remove('img-fade-in');
-  modalImg.classList.add('img-fade-out');
+  const modalImg = document.getElementById("modal-img");
+  modalImg.classList.remove("img-fade-in");
+  modalImg.classList.add("img-fade-out");
 
   setTimeout(() => {
-    modalImg.src     = imgEl?.src || '';
-    modalImg.alt     = titulo;
+    modalImg.src = imgEl?.src || "";
+    modalImg.alt = titulo;
     modalImg.onerror = () => {
       modalImg.src = `https://placehold.co/400x400/262336/40ffbf?text=${encodeURIComponent(titulo)}`;
     };
-    modalImg.classList.remove('img-fade-out');
-    modalImg.classList.add('img-fade-in');
+    modalImg.classList.remove("img-fade-out");
+    modalImg.classList.add("img-fade-in");
   }, 160);
 
   // Badge de la imagen
-  const badgeImgEl = document.getElementById('modal-badge-img');
+  const badgeImgEl = document.getElementById("modal-badge-img");
   if (badgeTxt) {
     badgeImgEl.textContent = badgeTxt;
     badgeImgEl.className =
-      'modal-badge-img visible' +
-      (esEco ? ' badge-eco' : badgeTxt === 'Oferta' ? ' badge-oferta' : '');
+      "modal-badge-img visible" +
+      (esEco ? " badge-eco" : badgeTxt === "Oferta" ? " badge-oferta" : "");
   } else {
-    badgeImgEl.className = 'modal-badge-img';
+    badgeImgEl.className = "modal-badge-img";
   }
 
   // Textos
-  document.getElementById('modal-categoria').textContent  = categoria;
-  document.getElementById('modal-titulo').textContent     = titulo;
-  document.getElementById('modal-precio').textContent     = precio;
-  document.getElementById('modal-desc').textContent       =
+  document.getElementById("modal-categoria").textContent = categoria;
+  document.getElementById("modal-titulo").textContent = titulo;
+  document.getElementById("modal-precio").textContent = precio;
+  document.getElementById("modal-desc").textContent =
     DESCRIPCIONES_PRODUCTO[titulo] ||
-    'Producto artesanal de alta calidad, elaborado con materiales 100 % ecológicos.';
-  document.getElementById('modal-rating-val').textContent =
-    (RATINGS_PRODUCTO[titulo] || 4.7).toFixed(1);
+    "Producto artesanal de alta calidad, elaborado con materiales 100 % ecológicos.";
+  document.getElementById("modal-rating-val").textContent = (
+    RATINGS_PRODUCTO[titulo] || 4.7
+  ).toFixed(1);
 
   // Miniaturas (3 vistas simuladas con la misma imagen)
-  const thumbsCont = document.getElementById('modal-thumbs');
-  thumbsCont.innerHTML = '';
+  const thumbsCont = document.getElementById("modal-thumbs");
+  thumbsCont.innerHTML = "";
   [imgEl?.src, imgEl?.src, imgEl?.src].forEach((src, i) => {
     if (!src) return;
-    const btn   = document.createElement('button');
-    btn.className = 'modal-thumb' + (i === 0 ? ' thumb-activa' : '');
-    btn.setAttribute('aria-label', `Vista ${i + 1}`);
+    const btn = document.createElement("button");
+    btn.className = "modal-thumb" + (i === 0 ? " thumb-activa" : "");
+    btn.setAttribute("aria-label", `Vista ${i + 1}`);
     btn.innerHTML = `<img src="${src}" alt="Vista ${i + 1}" />`;
-    btn.addEventListener('click', () => {
-      thumbsCont.querySelectorAll('.modal-thumb')
-        .forEach((t) => t.classList.remove('thumb-activa'));
-      btn.classList.add('thumb-activa');
-      modalImg.classList.add('img-fade-out');
+    btn.addEventListener("click", () => {
+      thumbsCont
+        .querySelectorAll(".modal-thumb")
+        .forEach((t) => t.classList.remove("thumb-activa"));
+      btn.classList.add("thumb-activa");
+      modalImg.classList.add("img-fade-out");
       setTimeout(() => {
         modalImg.src = src;
-        modalImg.classList.remove('img-fade-out');
-        modalImg.classList.add('img-fade-in');
+        modalImg.classList.remove("img-fade-out");
+        modalImg.classList.add("img-fade-in");
       }, 150);
     });
     thumbsCont.appendChild(btn);
@@ -471,114 +513,219 @@ function abrirModalVistaRapida(tarjeta) {
 
   // Resetear cantidad
   modalCantidad = 1;
-  document.getElementById('modal-qty-display').textContent = '1';
+  document.getElementById("modal-qty-display").textContent = "1";
 
   // Guardar producto activo
   modalProductoActivo = { nombre: titulo, precio };
 
   // URL personalizada del botón WhatsApp del modal
   const msgWA = encodeURIComponent(
-    `¡Hola ${NOMBRE_TIENDA}! 👋 Me interesa el producto: *${titulo}* (${precio}). ¿Está disponible?`
+    `¡Hola ${NOMBRE_TIENDA}! 👋 Me interesa el producto: *${titulo}* (${precio}). ¿Está disponible?`,
   );
-  document.getElementById('modal-btn-wa').onclick = () =>
-    window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${msgWA}`, '_blank', 'noopener,noreferrer');
+  document.getElementById("modal-btn-wa").onclick = () =>
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMERO}?text=${msgWA}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
 
   // Mostrar modal
-  const overlay = document.getElementById('modal-vista-rapida');
-  overlay.classList.add('modal-abierto');
-  overlay.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+  const overlay = document.getElementById("modal-vista-rapida");
+  overlay.classList.add("modal-abierto");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
 
   // Foco accesible
-  setTimeout(() => document.getElementById('modal-cerrar')?.focus(), 50);
+  setTimeout(() => document.getElementById("modal-cerrar")?.focus(), 50);
 }
 
 /** Cierra el modal con animación de salida */
 function cerrarModalVistaRapida() {
-  const overlay = document.getElementById('modal-vista-rapida');
+  const overlay = document.getElementById("modal-vista-rapida");
   if (!overlay) return;
-  overlay.classList.remove('modal-abierto');
-  overlay.setAttribute('aria-hidden', 'true');
-  if (!document.getElementById('panel-carrito')?.classList.contains('panel-abierto')) {
-    document.body.style.overflow = '';
+  overlay.classList.remove("modal-abierto");
+  overlay.setAttribute("aria-hidden", "true");
+  if (
+    !document
+      .getElementById("panel-carrito")
+      ?.classList.contains("panel-abierto")
+  ) {
+    document.body.style.overflow = "";
   }
 }
 
 /** Registra todos los listeners del modal */
 function iniciarModalVistaRapida() {
   // Botones "Vista Rápida" en las tarjetas
-  document.querySelectorAll('.overlay-btn').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+  document.querySelectorAll(".overlay-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
       e.stopPropagation();
       e.preventDefault();
-      const tarjeta = btn.closest('.card-producto');
+      const tarjeta = btn.closest(".card-producto");
       if (tarjeta) abrirModalVistaRapida(tarjeta);
     });
   });
 
   // Botón X
-  document.getElementById('modal-cerrar')
-    ?.addEventListener('click', cerrarModalVistaRapida);
+  document
+    .getElementById("modal-cerrar")
+    ?.addEventListener("click", cerrarModalVistaRapida);
 
   // Clic en el backdrop
-  document.getElementById('modal-backdrop')
-    ?.addEventListener('click', cerrarModalVistaRapida);
+  document
+    .getElementById("modal-backdrop")
+    ?.addEventListener("click", cerrarModalVistaRapida);
 
   // Selector de cantidad
-  document.getElementById('modal-qty-minus')?.addEventListener('click', () => {
+  document.getElementById("modal-qty-minus")?.addEventListener("click", () => {
     if (modalCantidad <= 1) return;
     modalCantidad--;
-    document.getElementById('modal-qty-display').textContent = modalCantidad;
+    document.getElementById("modal-qty-display").textContent = modalCantidad;
   });
 
-  document.getElementById('modal-qty-plus')?.addEventListener('click', () => {
+  document.getElementById("modal-qty-plus")?.addEventListener("click", () => {
     modalCantidad++;
-    document.getElementById('modal-qty-display').textContent = modalCantidad;
+    document.getElementById("modal-qty-display").textContent = modalCantidad;
   });
 
   // Botón "Agregar al Carrito" del modal
-  document.getElementById('modal-btn-agregar')?.addEventListener('click', () => {
-    const { nombre, precio } = modalProductoActivo;
-    if (!nombre) return;
+  document
+    .getElementById("modal-btn-agregar")
+    ?.addEventListener("click", () => {
+      const { nombre, precio } = modalProductoActivo;
+      if (!nombre) return;
 
-    for (let i = 0; i < modalCantidad; i++) {
-      agregarAlCarrito(nombre, precio);
-    }
+      for (let i = 0; i < modalCantidad; i++) {
+        agregarAlCarrito(nombre, precio);
+      }
 
-    // Feedback visual en el botón
-    const btn = document.getElementById('modal-btn-agregar');
-    const orig = btn.innerHTML;
-    btn.innerHTML = `
+      // Feedback visual en el botón
+      const btn = document.getElementById("modal-btn-agregar");
+      const orig = btn.innerHTML;
+      btn.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
         <path d="M5 12l5 5L20 7"/>
       </svg>
       ¡Agregado!
     `;
-    btn.style.background = '#1ebe5a';
+      btn.style.background = "#1ebe5a";
 
-    setTimeout(() => {
-      btn.innerHTML = orig;
-      btn.style.background = '';
-      cerrarModalVistaRapida();
-    }, 1400);
-  });
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = "";
+        cerrarModalVistaRapida();
+      }, 1400);
+    });
 }
-
 
 /* ============================================================
    🚀  INICIALIZACIÓN
    ============================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-  iniciarBadgeCarrito();       // Badge dinámico que comienza en 0
-  crearPanelCarrito();         // Inyecta el drawer lateral en el DOM
-  iniciarBotonesAgregar();     // Captura clics en .btn-add
-  iniciarBotonHeaderCarrito(); // Botón carrito del header abre el panel
-  iniciarBotonWhatsapp();      // Botón flotante con URL dinámica
-  iniciarTarjetasClickables(); // Toda la tarjeta es clicable
-  iniciarChipsCategorias();    // Filtros de categoría
-  iniciarAnimacionEntrada();   // Fade-in al hacer scroll
-  iniciarModalVistaRapida();   // Modal de Vista Rápida
+document.addEventListener("DOMContentLoaded", () => {
+  // ── Estilos del panel QR + botón SEGUIR PIDIENDO ──
+  const s = document.createElement("style");
+  s.textContent = `
+    /* ── QR en el panel ── */
+    .panel-qr-wrap {
+      padding: .85rem 1.1rem .6rem;
+      border-bottom: 1px solid rgba(66,61,120,.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .55rem;
+      background: rgba(64,255,191,.04);
+    }
+    .panel-qr-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #7d789e;
+    }
+    .panel-qr-frame {
+      position: relative;
+      width: 120px; height: 120px;
+      background: #fff;
+      border-radius: 10px;
+      border: 2px solid #40ffbf;
+      box-shadow: 0 0 18px rgba(64,255,191,.35), 0 0 6px rgba(64,255,191,.2);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .panel-qr-frame img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* esquinas decorativas */
+    .qr-c {
+      position: absolute;
+      width: 14px; height: 14px;
+      border-color: #40ffbf;
+      border-style: solid;
+    }
+    .qr-c.tl { top:-1px; left:-1px;   border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+    .qr-c.tr { top:-1px; right:-1px;  border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+    .qr-c.bl { bottom:-1px; left:-1px;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+    .qr-c.br { bottom:-1px; right:-1px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
 
-  actualizarUICarrito();       // Estado inicial de la UI
+    /* ── Botón SEGUIR PIDIENDO ── */
+    .panel-seguir-wrap {
+      padding: .7rem 1.1rem;
+      border-top: 1px solid rgba(66,61,120,.4);
+    }
+    .btn-seguir-pidiendo {
+      width: 100%;
+      padding: .72rem 1rem;
+      background: #16a34a;
+      border: 2px solid #22c55e;
+      border-radius: 10px;
+      color: #d1fae5;
+      font-size: .88rem;
+      font-weight: 800;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .22s, box-shadow .22s, transform .18s;
+      box-shadow:
+        0 0 12px rgba(34,197,94,.55),
+        0 0 28px rgba(34,197,94,.28),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      animation: neonPulse 2.4s ease-in-out infinite;
+    }
+    .btn-seguir-pidiendo:hover {
+      background: #15803d;
+      box-shadow:
+        0 0 20px rgba(34,197,94,.75),
+        0 0 44px rgba(34,197,94,.40);
+      transform: translateY(-2px);
+      animation: none;
+    }
+    .btn-seguir-pidiendo:active { transform: scale(.97); }
+    @keyframes neonPulse {
+      0%,100% { box-shadow: 0 0 12px rgba(34,197,94,.55), 0 0 28px rgba(34,197,94,.28); }
+      50%      { box-shadow: 0 0 20px rgba(34,197,94,.80), 0 0 48px rgba(34,197,94,.45); }
+    }
+  `;
+  document.head.appendChild(s);
+
+  iniciarBadgeCarrito(); // Badge dinámico que comienza en 0
+  crearPanelCarrito(); // Inyecta el drawer lateral en el DOM
+  iniciarBotonesAgregar(); // Captura clics en .btn-add
+  iniciarBotonHeaderCarrito(); // Botón carrito del header abre el panel
+  iniciarBotonWhatsapp(); // Botón flotante con URL dinámica
+  iniciarTarjetasClickables(); // Toda la tarjeta es clicable
+  iniciarChipsCategorias(); // Filtros de categoría
+  iniciarAnimacionEntrada(); // Fade-in al hacer scroll
+  iniciarModalVistaRapida(); // Modal de Vista Rápida
+
+  actualizarUICarrito(); // Estado inicial de la UI
 });
