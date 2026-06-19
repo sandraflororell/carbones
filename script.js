@@ -26,6 +26,19 @@ const carrito = {
    UTILIDADES — WHATSAPP
    ============================================================ */
 
+/** Extrae el valor numérico de un string de precio como "15 Bs" → 15 */
+function parsearPrecio(precioStr) {
+  return parseFloat(precioStr) || 0;
+}
+
+/** Calcula el total en Bs de todos los ítems del carrito */
+function calcularTotal() {
+  return carrito.items.reduce(
+    (sum, item) => sum + parsearPrecio(item.precio) * item.qty,
+    0
+  );
+}
+
 function construirUrlWhatsapp() {
   let mensaje;
 
@@ -36,13 +49,18 @@ function construirUrlWhatsapp() {
       `¡Muchas gracias!`;
   } else {
     const detalle = carrito.items
-      .map((item) => `  • ${item.nombre} x${item.qty} — ${item.precio}`)
+      .map((item) => {
+        const sub = (parsearPrecio(item.precio) * item.qty).toFixed(2);
+        return `  • ${item.nombre} x${item.qty} — ${item.precio}/u = ${sub} Bs`;
+      })
       .join("\n");
 
+    const total = calcularTotal().toFixed(2);
+
     mensaje =
-      `¡Hola ${NOMBRE_TIENDA}! 🛒 Quiero coordinar mi pedido de ` +
-      `*${carrito.cantidad} artículo${carrito.cantidad !== 1 ? "s" : ""}* ` +
-      `surtidos que agregué al carrito:\n\n${detalle}\n\n` +
+      `¡Hola ${NOMBRE_TIENDA}! 🛒 Quiero coordinar mi pedido:\n\n` +
+      `${detalle}\n\n` +
+      `*Total a pagar: ${total} Bs*\n\n` +
       `Por favor, indíquenme disponibilidad y cómo proceder. ¡Gracias!`;
   }
 
@@ -70,21 +88,46 @@ function actualizarUICarrito() {
 
   if (panelContador) panelContador.textContent = carrito.cantidad;
 
+  // ── Total a pagar ──
+  const totalEl = document.getElementById("panel-total-pagar");
+  if (totalEl) totalEl.textContent = calcularTotal().toFixed(2) + " Bs";
+
   if (panelLista) {
     panelLista.innerHTML = carrito.items
-      .map(
-        (item) => `
-      <li class="panel-item">
-        <span class="panel-item-nombre">${item.nombre}</span>
-        <span class="panel-item-meta">${item.precio}</span>
-        <div class="panel-item-controles">
-          <button class="panel-btn-menos" data-nombre="${item.nombre}" aria-label="Quitar uno">−</button>
-          <span class="panel-item-qty">${item.qty}</span>
-          <button class="panel-btn-mas"  data-nombre="${item.nombre}" aria-label="Agregar uno">+</button>
+      .map((item) => {
+        const precioNum = parsearPrecio(item.precio);
+        const subtotal  = (precioNum * item.qty).toFixed(2);
+        const imgHtml   = item.img
+          ? `<img src="${item.img}" alt="${item.nombre}" loading="lazy"
+                  onerror="this.src='https://placehold.co/54x54/2e2a42/40ffbf?text=📦'">`
+          : `<img src="https://placehold.co/54x54/2e2a42/40ffbf?text=📦" alt="${item.nombre}">`;
+        return `
+      <li class="panel-item"
+          data-nombre="${item.nombre}"
+          data-precio="${precioNum}">
+
+        <!-- Bloque izquierdo: miniatura -->
+        <div class="panel-item-img">${imgHtml}</div>
+
+        <!-- Bloque central: nombre, precio/u, cantidad -->
+        <div class="panel-item-info">
+          <span class="panel-item-nombre">${item.nombre}</span>
+          <span class="panel-item-precio-unit">${item.precio} / unidad</span>
+          <div class="panel-item-controles">
+            <button class="panel-btn-menos" data-nombre="${item.nombre}" aria-label="Quitar uno">−</button>
+            <span class="panel-item-qty">${item.qty}</span>
+            <button class="panel-btn-mas"  data-nombre="${item.nombre}" aria-label="Agregar uno">+</button>
+          </div>
         </div>
-      </li>
-    `,
-      )
+
+        <!-- Bloque derecho: subtotal -->
+        <div class="panel-item-subtotal-wrap">
+          <span class="panel-item-subtotal-label">subtotal</span>
+          <span class="panel-item-subtotal">${subtotal} Bs</span>
+        </div>
+
+      </li>`;
+      })
       .join("");
 
     panelLista.querySelectorAll(".panel-btn-menos").forEach((btn) => {
@@ -111,12 +154,12 @@ function actualizarUICarrito() {
   if (btnWA) btnWA.href = construirUrlWhatsapp();
 }
 
-function agregarAlCarrito(nombre, precio) {
+function agregarAlCarrito(nombre, precio, imgSrc = "") {
   const existente = carrito.items.find((i) => i.nombre === nombre);
   if (existente) {
     existente.qty += 1;
   } else {
-    carrito.items.push({ nombre, precio, qty: 1 });
+    carrito.items.push({ nombre, precio, qty: 1, img: imgSrc });
   }
   carrito.cantidad += 1;
   actualizarUICarrito();
@@ -166,8 +209,10 @@ function iniciarBotonesAgregar() {
         "Producto";
       const precio =
         tarjeta?.querySelector(".precio")?.textContent?.trim() || "";
+      const imgSrc =
+        tarjeta?.querySelector(".producto-img img")?.src || "";
 
-      agregarAlCarrito(nombre, precio);
+      agregarAlCarrito(nombre, precio, imgSrc);
 
       boton.classList.add("btn-add--activo");
       setTimeout(() => boton.classList.remove("btn-add--activo"), 380);
@@ -248,9 +293,16 @@ function crearPanelCarrito() {
       </div>
 
       <footer class="panel-footer">
-        <p class="panel-resumen">
-          Total de artículos: <strong id="panel-count-footer">0</strong>
-        </p>
+        <div class="panel-resumen">
+          <div class="panel-resumen-fila">
+            <span>Total de artículos:</span>
+            <strong id="panel-count-footer">0</strong>
+          </div>
+          <div class="panel-resumen-fila panel-resumen-total">
+            <span>Total a pagar:</span>
+            <strong id="panel-total-pagar">0.00 Bs</strong>
+          </div>
+        </div>
         <button class="btn-finalizar" id="btn-finalizar-pedido" disabled>
           <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor">
             <path d="M16.003 2.667C8.636 2.667 2.667 8.636 2.667 16c0 2.347.614 4.553 1.686 6.467L2.667 29.333l7.067-1.653A13.26 13.26 0 0016.003 29.333c7.364 0 13.33-5.97 13.33-13.333S23.367 2.667 16.003 2.667zm6.14 18.293c-.337-.167-1.99-.98-2.3-1.093-.31-.113-.533-.167-.757.167-.22.333-.863 1.093-1.057 1.317-.193.22-.39.247-.727.08-.337-.167-1.42-.523-2.703-1.667-1-.89-1.673-1.99-1.87-2.327-.196-.337-.02-.52.147-.687.153-.153.337-.4.503-.6.167-.2.223-.333.333-.557.113-.22.057-.413-.027-.58-.083-.167-.757-1.82-1.037-2.493-.273-.653-.55-.563-.757-.573-.193-.01-.413-.013-.633-.013s-.58.08-.883.4c-.303.32-1.16 1.133-1.16 2.76s1.187 3.2 1.353 3.42c.167.22 2.337 3.567 5.66 5.003.793.34 1.41.543 1.89.697.793.253 1.517.217 2.087.133.637-.093 1.99-.813 2.27-1.597.28-.783.28-1.453.197-1.593-.08-.143-.3-.223-.633-.387z"/>
@@ -293,7 +345,11 @@ function crearPanelCarrito() {
 
 function abrirPanelCarrito() {
   document.getElementById("panel-carrito")?.classList.add("panel-abierto");
-  document.body.style.overflow = "hidden";
+  // Solo bloquear scroll en mobile; en desktop el panel siempre está visible
+  if (window.innerWidth < 1024) {
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+  }
 }
 
 function cerrarPanelCarrito() {
@@ -304,6 +360,7 @@ function cerrarPanelCarrito() {
       ?.classList.contains("modal-abierto")
   ) {
     document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
   }
 }
 
@@ -623,100 +680,6 @@ function iniciarModalVistaRapida() {
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ── Estilos del panel QR + botón SEGUIR PIDIENDO ──
-  const s = document.createElement("style");
-  s.textContent = `
-    /* ── QR en el panel ── */
-    .panel-qr-wrap {
-      padding: .85rem 1.1rem .6rem;
-      border-bottom: 1px solid rgba(66,61,120,.45);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .55rem;
-      background: rgba(64,255,191,.04);
-    }
-    .panel-qr-label {
-      font-size: .7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      color: #7d789e;
-    }
-    .panel-qr-frame {
-      position: relative;
-      width: 120px; height: 120px;
-      background: #fff;
-      border-radius: 10px;
-      border: 2px solid #40ffbf;
-      box-shadow: 0 0 18px rgba(64,255,191,.35), 0 0 6px rgba(64,255,191,.2);
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-    .panel-qr-frame img {
-      width: 100%; height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    /* esquinas decorativas */
-    .qr-c {
-      position: absolute;
-      width: 14px; height: 14px;
-      border-color: #40ffbf;
-      border-style: solid;
-    }
-    .qr-c.tl { top:-1px; left:-1px;   border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
-    .qr-c.tr { top:-1px; right:-1px;  border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
-    .qr-c.bl { bottom:-1px; left:-1px;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
-    .qr-c.br { bottom:-1px; right:-1px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
-
-    /* ── Botón SEGUIR PIDIENDO ── */
-    .panel-seguir-wrap {
-      padding: .7rem 1.1rem;
-      border-top: 1px solid rgba(66,61,120,.4);
-    }
-    .btn-seguir-pidiendo {
-      width: 100%;
-      padding: .72rem 1rem;
-      background: #16a34a;
-      border: 2px solid #22c55e;
-      border-radius: 10px;
-      color: #d1fae5;
-      font-size: .88rem;
-      font-weight: 800;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .5rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background .22s, box-shadow .22s, transform .18s;
-      box-shadow:
-        0 0 12px rgba(34,197,94,.55),
-        0 0 28px rgba(34,197,94,.28),
-        inset 0 1px 0 rgba(255,255,255,.08);
-      animation: neonPulse 2.4s ease-in-out infinite;
-    }
-    .btn-seguir-pidiendo:hover {
-      background: #15803d;
-      box-shadow:
-        0 0 20px rgba(34,197,94,.75),
-        0 0 44px rgba(34,197,94,.40);
-      transform: translateY(-2px);
-      animation: none;
-    }
-    .btn-seguir-pidiendo:active { transform: scale(.97); }
-    @keyframes neonPulse {
-      0%,100% { box-shadow: 0 0 12px rgba(34,197,94,.55), 0 0 28px rgba(34,197,94,.28); }
-      50%      { box-shadow: 0 0 20px rgba(34,197,94,.80), 0 0 48px rgba(34,197,94,.45); }
-    }
-  `;
-  document.head.appendChild(s);
-
   iniciarBadgeCarrito(); // Badge dinámico que comienza en 0
   crearPanelCarrito(); // Inyecta el drawer lateral en el DOM
   iniciarBotonesAgregar(); // Captura clics en .btn-add
@@ -726,6 +689,9 @@ document.addEventListener("DOMContentLoaded", () => {
   iniciarChipsCategorias(); // Filtros de categoría
   iniciarAnimacionEntrada(); // Fade-in al hacer scroll
   iniciarModalVistaRapida(); // Modal de Vista Rápida
+
+  // Clase para el padding del body en desktop (panel siempre visible)
+  document.body.classList.add("has-panel");
 
   actualizarUICarrito(); // Estado inicial de la UI
 });

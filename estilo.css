@@ -55,7 +55,7 @@
   padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
@@ -63,7 +63,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: hidden;  /* evita desbordamiento horizontal global */
 }
 
 img { display: block; max-width: 100%; }
@@ -744,50 +744,58 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ──────────────────────────────────────────────
+   00. BASE / DESKTOP (Estructura principal en PC)
+─────────────────────────────────────────────── */
+/* El catálogo necesita un margen derecho en PC para que el panel no lo tape */
+.catalogo-section {
+  padding: 2rem;
+}
+
+/* ──────────────────────────────────────────────
    11. RESPONSIVE — TABLET (≤ 1024px)
 ─────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .catalogo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
   .value-inner { gap: 2rem; }
   .value-divider { display: none; }
 }
 
 /* ──────────────────────────────────────────────
-   12. RESPONSIVE — MOBILE (≤ 680px)
+   12. RESPONSIVE — MOBILE (≤ 768px)
 ─────────────────────────────────────────────── */
-@media (max-width: 680px) {
+@media (max-width: 768px) {
   /* Header */
   .nav-links { display: none; }
-
   .header-inner { padding: 0 1.25rem; }
 
   /* Hero */
   .hero { padding: 3.5rem 1.25rem 3rem; }
-
-  .hero-stats {
-    gap: 1.25rem;
-    padding: 1rem 1.5rem;
-  }
-
+  .hero-stats { gap: 1.25rem; padding: 1rem 1.5rem; }
   .stat-value { font-size: 1.25rem; }
 
-  /* Grid → 1 col on small, 2 on medium mobile */
+  /* Catálogo — una sola columna, tarjetas a ancho completo */
+  .catalogo-section {
+    padding: 2rem 1.25rem 3rem;
+  }
   .catalogo-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;   /* una columna, scroll vertical limpio */
     gap: 1rem;
   }
-
-  .catalogo-section { padding: 2rem 1.25rem 3rem; }
+  /* Tarjetas ocupan el 100% de la columna */
+  .card-link,
+  .card-producto {
+    width: 100%;
+  }
+  /* Imagen más alta para que se aprecie bien en pantalla completa */
+  .producto-img { height: 200px; }
+  /* Centrar textos internos de la tarjeta */
+  .card-body { text-align: center; }
+  .card-footer { justify-content: center; gap: 1.25rem; }
 
   .section-header { flex-direction: column; align-items: flex-start; }
-
   .section-title { font-size: 1.5rem; }
-
-  /* Image height on mobile */
-  .producto-img { height: 150px; }
 
   /* Value strip */
   .value-inner {
@@ -795,25 +803,14 @@ button { cursor: pointer; font-family: inherit; }
     align-items: flex-start;
     gap: 1.25rem;
   }
-
   .value-item { min-width: unset; }
 
   /* Categorias */
   .categorias-strip { padding: 1rem 1.25rem; }
 
   /* WhatsApp */
-  #btn-whatsapp {
-    width: 52px;
-    height: 52px;
-    bottom: 20px;
-    right: 20px;
-  }
+  #btn-whatsapp { width: 52px; height: 52px; bottom: 20px; right: 20px; }
 }
-
-@media (max-width: 380px) {
-  .catalogo-grid { grid-template-columns: 1fr; }
-}
-
 /* ──────────────────────────────────────────────
    13. ANIMACIÓN BADGE CARRITO
 ─────────────────────────────────────────────── */
@@ -841,7 +838,7 @@ button { cursor: pointer; font-family: inherit; }
    14. PANEL / DRAWER DEL CARRITO
 ─────────────────────────────────────────────── */
 
-/* Overlay oscuro detrás del drawer */
+/* ── Overlay oscuro — solo visible en mobile ── */
 .panel-overlay {
   position: fixed;
   inset: 0;
@@ -853,7 +850,7 @@ button { cursor: pointer; font-family: inherit; }
   transition: opacity .3s ease;
 }
 
-/* Contenedor posicionado (no visible por defecto) */
+/* ── Contenedor raíz del panel ── */
 #panel-carrito {
   position: fixed;
   inset: 0;
@@ -861,7 +858,7 @@ button { cursor: pointer; font-family: inherit; }
   pointer-events: none;
 }
 
-/* Cuando está abierto */
+/* Cuando está abierto (mobile) */
 #panel-carrito.panel-abierto {
   pointer-events: auto;
 }
@@ -871,7 +868,7 @@ button { cursor: pointer; font-family: inherit; }
   pointer-events: auto;
 }
 
-/* Drawer lateral */
+/* ── Drawer (panel deslizante) ── */
 .panel-drawer {
   position: fixed;
   top: 0;
@@ -887,18 +884,20 @@ button { cursor: pointer; font-family: inherit; }
   transform: translateX(105%);
   transition: transform .35s cubic-bezier(.4, 0, .2, 1);
   z-index: 1101;
+  /* Scroll interno: solo el cuerpo de ítems desplaza */
+  overflow: hidden;
 }
 
 #panel-carrito.panel-abierto .panel-drawer {
   transform: translateX(0);
 }
 
-/* Cabecera del panel */
+/* ── Cabecera ── */
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border-soft);
   flex-shrink: 0;
 }
@@ -914,9 +913,9 @@ button { cursor: pointer; font-family: inherit; }
 
 .panel-badge {
   background: var(--accent);
-  color: #fff;
+  color: #0d0c18;
   font-size: .7rem;
-  font-weight: 700;
+  font-weight: 800;
   width: 22px;
   height: 22px;
   border-radius: 50%;
@@ -934,6 +933,7 @@ button { cursor: pointer; font-family: inherit; }
   display: grid;
   place-items: center;
   transition: var(--t);
+  flex-shrink: 0;
 }
 
 .panel-cerrar:hover {
@@ -941,12 +941,72 @@ button { cursor: pointer; font-family: inherit; }
   border-color: var(--accent);
 }
 
-/* Cuerpo scrollable */
+/* ── QR — tamaño fijo, nunca se deforma ── */
+.panel-qr-wrap {
+  padding: .75rem 1.25rem .6rem;
+  border-bottom: 1px solid rgba(66, 61, 120, .45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .45rem;
+  background: rgba(64, 255, 191, .04);
+  flex-shrink: 0;
+}
+
+.panel-qr-label {
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-dim);
+}
+
+.panel-qr-frame {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid #40ffbf;
+  box-shadow: 0 0 16px rgba(64, 255, 191, .35);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.panel-qr-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Esquinas decorativas del QR */
+.qr-c {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-color: #40ffbf;
+  border-style: solid;
+}
+.qr-c.tl { top: -1px; left: -1px;   border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+.qr-c.tr { top: -1px; right: -1px;  border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+.qr-c.bl { bottom: -1px; left: -1px;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+.qr-c.br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+/* ── Cuerpo — área scrollable con los ítems ── */
 .panel-cuerpo {
   flex: 1;
   overflow-y: auto;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
+  /* Scrollbar delgada */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
+
+.panel-cuerpo::-webkit-scrollbar       { width: 4px; }
+.panel-cuerpo::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
 /* Estado vacío */
 .panel-vacio {
@@ -955,22 +1015,26 @@ button { cursor: pointer; font-family: inherit; }
   align-items: center;
   justify-content: center;
   gap: .75rem;
-  height: 220px;
+  min-height: 160px;
   text-align: center;
   color: var(--text-dim);
+  padding: 1rem 0;
 }
 
-.panel-vacio p   { font-size: .95rem; font-weight: 500; }
-.panel-vacio span { font-size: .8rem; }
+.panel-vacio p    { font-size: .9rem; font-weight: 500; color: var(--text-muted); }
+.panel-vacio span { font-size: .78rem; }
 
 /* Lista de ítems */
 .panel-lista {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: .75rem;
+  gap: .7rem;
 }
 
+/* ── Tarjeta de ítem: 3 bloques horizontales ──
+   [img] [info central] [subtotal]
+─────────────────────────────────────────────── */
 .panel-item {
   display: flex;
   align-items: center;
@@ -978,46 +1042,79 @@ button { cursor: pointer; font-family: inherit; }
   background: var(--card);
   border: 1px solid var(--border-soft);
   border-radius: var(--r-md);
-  padding: .75rem 1rem;
+  padding: .7rem .85rem;
   animation: fadeSlideIn .25s ease;
+  min-width: 0;          /* evita que flex desborde el contenedor */
 }
 
 @keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateX(12px); }
+  from { opacity: 0; transform: translateX(10px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-.panel-item-nombre {
-  flex: 1;
-  font-size: .85rem;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.3;
+/* Bloque izquierdo — miniatura del producto */
+.panel-item-img {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  display: grid;
+  place-items: center;
 }
 
-.panel-item-meta {
-  font-size: .8rem;
+.panel-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Bloque central — nombre, precio unitario, cantidad */
+.panel-item-info {
+  flex: 1;
+  min-width: 0;          /* permite que el texto recorte */
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.panel-item-nombre {
+  font-size: .82rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.panel-item-precio-unit {
+  font-size: .72rem;
+  color: var(--text-dim);
+  font-weight: 500;
 }
 
 .panel-item-controles {
   display: flex;
   align-items: center;
-  gap: .4rem;
-  flex-shrink: 0;
+  gap: .35rem;
+  margin-top: .25rem;
 }
 
 .panel-btn-menos,
 .panel-btn-mas {
   width: 26px;
   height: 26px;
+  min-width: 26px;
+  min-height: 26px;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: .95rem;
   line-height: 1;
   display: grid;
   place-items: center;
@@ -1032,43 +1129,163 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 .panel-item-qty {
-  font-size: .9rem;
+  font-size: .85rem;
   font-weight: 700;
   color: var(--text);
   min-width: 18px;
   text-align: center;
 }
 
-/* Footer con resumen y botón de pedido */
-.panel-footer {
-  padding: 1.25rem 1.5rem 1.5rem;
-  border-top: 1px solid var(--border-soft);
+/* Bloque derecho — subtotal del ítem */
+.panel-item-subtotal-wrap {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: .9rem;
+  align-items: flex-end;
+  gap: .1rem;
+}
+
+.panel-item-subtotal {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent-glow);
+  white-space: nowrap;
+}
+
+.panel-item-subtotal-label {
+  font-size: .65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+/* Touch targets mínimos en mobile */
+@media (max-width: 1023px) {
+  .panel-btn-menos,
+  .panel-btn-mas {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    font-size: 1.1rem;
+  }
+  .panel-item-img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* ── Botón SEGUIR PIDIENDO ── */
+.panel-seguir-wrap {
+  padding: .6rem 1.25rem;
+  border-top: 1px solid rgba(66, 61, 120, .4);
   flex-shrink: 0;
 }
 
-.panel-resumen {
-  font-size: .85rem;
-  color: var(--text-muted);
-  text-align: center;
+.btn-seguir-pidiendo {
+  width: 100%;
+  /* Altura mínima táctil de 44px */
+  min-height: 44px;
+  padding: .65rem 1rem;
+  background: #16a34a;
+  border: 2px solid #22c55e;
+  border-radius: var(--r-sm);
+  color: #d1fae5;
+  font-size: .88rem;
+  font-weight: 800;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .22s, box-shadow .22s, transform .18s;
+  box-shadow:
+    0 0 12px rgba(34, 197, 94, .55),
+    0 0 28px rgba(34, 197, 94, .28),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+  animation: neonPulse 2.4s ease-in-out infinite;
 }
 
-.panel-resumen strong {
-  color: var(--accent);
-  font-size: 1rem;
+.btn-seguir-pidiendo:hover {
+  background: #15803d;
+  box-shadow: 0 0 20px rgba(34, 197, 94, .75), 0 0 44px rgba(34, 197, 94, .4);
+  transform: translateY(-2px);
+  animation: none;
 }
+
+.btn-seguir-pidiendo:active { transform: scale(.97); }
+
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(34, 197, 94, .55), 0 0 28px rgba(34, 197, 94, .28); }
+  50%       { box-shadow: 0 0 20px rgba(34, 197, 94, .80), 0 0 48px rgba(34, 197, 94, .45); }
+}
+
+/* ── Footer fijo al fondo del panel ── */
+.panel-footer {
+  padding: .75rem 1.25rem 1rem;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.panel-resumen {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.panel-resumen-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .82rem;
+  color: var(--text-muted);
+}
+
+.panel-resumen-fila strong {
+  color: var(--accent);
+  font-size: .95rem;
+}
+
+/* Fila del total — más destacada */
+.panel-resumen-total {
+  padding-top: .35rem;
+  border-top: 1px solid var(--border-soft);
+  margin-top: .1rem;
+}
+
+.panel-resumen-total span {
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.panel-resumen-total strong {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Subtotal por ítem — bloque derecho (ver .panel-item-subtotal-wrap en sección 14) */
 
 /* Botón "Finalizar pedido" */
 .btn-finalizar {
   width: 100%;
-  padding: .85rem 1.25rem;
+  min-height: 46px;
+  padding: .8rem 1.25rem;
   background: #25d366;
   border: none;
   border-radius: var(--r-md);
   color: #fff;
-  font-size: .95rem;
+  font-size: .92rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1093,10 +1310,109 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ──────────────────────────────────────────────
-   15. RESPONSIVE PANEL (mobile)
+   15. DESKTOP SIDEBAR — Panel fijo lateral (≥ 1024px)
+   El panel se integra como columna derecha del layout.
+   El overlay se oculta; el botón X se oculta.
 ─────────────────────────────────────────────── */
-@media (max-width: 480px) {
-  .panel-drawer { width: 100vw; }
+@media (min-width: 1024px) {
+
+  /* Dar espacio al panel en el lado derecho del viewport */
+  body.has-panel { padding-right: 320px; }
+
+  /* Overlay: invisible siempre en desktop */
+  #panel-carrito .panel-overlay {
+    display: none !important;
+  }
+
+  /* El contenedor root del panel no bloquea clics (no hay overlay) */
+  #panel-carrito {
+    pointer-events: none;
+  }
+
+  /* El drawer siempre visible, pegado debajo del header */
+  .panel-drawer {
+    transform: translateX(0) !important;
+    width: 320px;
+    border-left: 1px solid var(--border-soft);
+    box-shadow: -8px 0 32px rgba(0, 0, 0, .35);
+    top: 68px;
+    height: calc(100vh - 68px);
+    /* Clic dentro del panel debe funcionar */
+    pointer-events: auto;
+  }
+
+  /* El botón X se oculta en desktop */
+  .panel-cerrar { display: none; }
+
+  /* El body puede hacer scroll normalmente */
+  body { overflow-y: auto !important; }
+}
+
+/* Ancho más generoso en pantallas muy anchas */
+@media (min-width: 1440px) {
+  body.has-panel  { padding-right: 360px; }
+  .panel-drawer   { width: 360px; }
+}
+
+/* ──────────────────────────────────────────────
+   15b. MOBILE DRAWER (< 1024px)
+─────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Quitar el padding del body — el panel se superpone como drawer */
+  body.has-panel { padding-right: 0 !important; }
+
+  /* El panel vuelve al comportamiento de drawer flotante */
+  .panel-drawer {
+    top: 0;
+    height: 100dvh;          /* dvh = dynamic viewport height, correcto en móvil */
+    height: 100vh;           /* fallback */
+    width: 100vw;            /* pantalla completa en móvil */
+    max-width: 100vw;
+    transform: translateX(100%);   /* oculto a la derecha */
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Cuando se abre: desliza a la vista */
+  #panel-carrito.panel-abierto .panel-drawer {
+    transform: translateX(0);
+  }
+
+  /* El overlay vuelve a ser visible al abrir */
+  #panel-carrito.panel-abierto .panel-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* El botón X vuelve a mostrarse */
+  .panel-cerrar { display: grid !important; }
+
+  /* El contenedor raíz acepta clics cuando está abierto */
+  #panel-carrito.panel-abierto {
+    pointer-events: auto;
+  }
+
+  /* El QR no debe ocupar demasiado espacio en pantalla pequeña */
+  .panel-qr-frame {
+    width: 90px;
+    height: 90px;
+  }
+
+  /* Los botones de acción se apilan verticalmente si no caben */
+  .panel-seguir-wrap,
+  .panel-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Área táctil mínima para botones */
+  .panel-btn-menos,
+  .panel-btn-mas {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
 }
 
 /* ──────────────────────────────────────────────
