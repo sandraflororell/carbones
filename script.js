@@ -7,16 +7,14 @@
 "use strict";
 
 /* ============================================================
-   ⚙️  CONFIGURACIÓN GLOBAL
+   ⚙️ CONFIGURACIÓN GLOBAL
    ============================================================ */
-
 const WHATSAPP_NUMERO = "59176908555";
 const NOMBRE_TIENDA = "Tienda Virtual Carbones DARK";
 
 /* ============================================================
-   🛒  ESTADO DEL CARRITO
+   🛒 ESTADO DEL CARRITO
    ============================================================ */
-
 const carrito = {
   cantidad: 0,
   items: [],
@@ -25,17 +23,14 @@ const carrito = {
 /* ============================================================
    UTILIDADES — WHATSAPP
    ============================================================ */
-
-/** Extrae el valor numérico de un string de precio como "15 Bs" → 15 */
 function parsearPrecio(precioStr) {
   return parseFloat(precioStr) || 0;
 }
 
-/** Calcula el total en Bs de todos los ítems del carrito */
 function calcularTotal() {
   return carrito.items.reduce(
     (sum, item) => sum + parsearPrecio(item.precio) * item.qty,
-    0
+    0,
   );
 }
 
@@ -70,7 +65,6 @@ function construirUrlWhatsapp() {
 /* ============================================================
    UTILIDADES — CARRITO UI
    ============================================================ */
-
 function actualizarUICarrito() {
   const badge = document.getElementById("cart-badge-count");
   if (badge) {
@@ -88,7 +82,6 @@ function actualizarUICarrito() {
 
   if (panelContador) panelContador.textContent = carrito.cantidad;
 
-  // ── Total a pagar ──
   const totalEl = document.getElementById("panel-total-pagar");
   if (totalEl) totalEl.textContent = calcularTotal().toFixed(2) + " Bs";
 
@@ -96,20 +89,14 @@ function actualizarUICarrito() {
     panelLista.innerHTML = carrito.items
       .map((item) => {
         const precioNum = parsearPrecio(item.precio);
-        const subtotal  = (precioNum * item.qty).toFixed(2);
-        const imgHtml   = item.img
+        const subtotal = (precioNum * item.qty).toFixed(2);
+        const imgHtml = item.img
           ? `<img src="${item.img}" alt="${item.nombre}" loading="lazy"
-                  onerror="this.src='https://placehold.co/54x54/2e2a42/40ffbf?text=📦'">`
+                 onerror="this.src='https://placehold.co/54x54/2e2a42/40ffbf?text=📦'">`
           : `<img src="https://placehold.co/54x54/2e2a42/40ffbf?text=📦" alt="${item.nombre}">`;
         return `
-      <li class="panel-item"
-          data-nombre="${item.nombre}"
-          data-precio="${precioNum}">
-
-        <!-- Bloque izquierdo: miniatura -->
+      <li class="panel-item" data-nombre="${item.nombre}" data-precio="${precioNum}">
         <div class="panel-item-img">${imgHtml}</div>
-
-        <!-- Bloque central: nombre, precio/u, cantidad -->
         <div class="panel-item-info">
           <span class="panel-item-nombre">${item.nombre}</span>
           <span class="panel-item-precio-unit">${item.precio} / unidad</span>
@@ -119,13 +106,10 @@ function actualizarUICarrito() {
             <button class="panel-btn-mas"  data-nombre="${item.nombre}" aria-label="Agregar uno">+</button>
           </div>
         </div>
-
-        <!-- Bloque derecho: subtotal -->
         <div class="panel-item-subtotal-wrap">
           <span class="panel-item-subtotal-label">subtotal</span>
           <span class="panel-item-subtotal">${subtotal} Bs</span>
         </div>
-
       </li>`;
       })
       .join("");
@@ -181,9 +165,8 @@ function modificarCantidad(nombre, delta) {
 }
 
 /* ============================================================
-   1. BADGE DEL CARRITO (inicia en 0)
+   1. BADGE DEL CARRITO
    ============================================================ */
-
 function iniciarBadgeCarrito() {
   const badge = document.querySelector(".cart-badge");
   if (!badge) return;
@@ -196,7 +179,6 @@ function iniciarBadgeCarrito() {
 /* ============================================================
    2. BOTONES "AGREGAR AL CARRITO" (.btn-add)
    ============================================================ */
-
 function iniciarBotonesAgregar() {
   document.querySelectorAll(".btn-add").forEach((boton) => {
     boton.addEventListener("click", (e) => {
@@ -209,8 +191,7 @@ function iniciarBotonesAgregar() {
         "Producto";
       const precio =
         tarjeta?.querySelector(".precio")?.textContent?.trim() || "";
-      const imgSrc =
-        tarjeta?.querySelector(".producto-img img")?.src || "";
+      const imgSrc = tarjeta?.querySelector(".producto-img img")?.src || "";
 
       agregarAlCarrito(nombre, precio, imgSrc);
 
@@ -225,8 +206,10 @@ function iniciarBotonesAgregar() {
 /* ============================================================
    3. PANEL LATERAL DEL CARRITO
    ============================================================ */
-
 function crearPanelCarrito() {
+  // Evitar duplicar el panel si ya existe en el HTML
+  if (document.getElementById("panel-carrito")) return;
+
   const panel = document.createElement("aside");
   panel.id = "panel-carrito";
   panel.setAttribute("role", "dialog");
@@ -254,12 +237,10 @@ function crearPanelCarrito() {
         </button>
       </header>
 
-      <!-- ── QR de WhatsApp ── -->
       <div class="panel-qr-wrap">
         <p class="panel-qr-label">Pago rápido · Escanea el QR</p>
         <div class="panel-qr-frame">
-          <img src="img/qr.jpeg" alt="Código QR de pago WhatsApp"
-               onerror="this.style.display='none'" />
+          <img src="img/qr.jpeg" alt="Código QR de pago WhatsApp" onerror="this.style.display='none'" />
           <span class="qr-c tl"></span>
           <span class="qr-c tr"></span>
           <span class="qr-c bl"></span>
@@ -280,12 +261,9 @@ function crearPanelCarrito() {
         <ul class="panel-lista" id="panel-lista"></ul>
       </div>
 
-      <!-- ── Botón SEGUIR PIDIENDO ── -->
       <div class="panel-seguir-wrap">
-        <button class="btn-seguir-pidiendo" id="btn-seguir-pidiendo"
-                onclick="cerrarPanelCarrito()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.5">
+        <button class="btn-seguir-pidiendo" id="btn-seguir-pidiendo" onclick="cerrarPanelCarrito()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
           SEGUIR PIDIENDO
@@ -345,7 +323,6 @@ function crearPanelCarrito() {
 
 function abrirPanelCarrito() {
   document.getElementById("panel-carrito")?.classList.add("panel-abierto");
-  // Solo bloquear scroll en mobile; en desktop el panel siempre está visible
   if (window.innerWidth < 1024) {
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
@@ -376,7 +353,6 @@ function iniciarBotonHeaderCarrito() {
 /* ============================================================
    4. BOTÓN FLOTANTE WHATSAPP
    ============================================================ */
-
 function iniciarBotonWhatsapp() {
   const btn = document.getElementById("btn-whatsapp");
   if (!btn) return;
@@ -395,7 +371,6 @@ function iniciarBotonWhatsapp() {
 /* ============================================================
    5. TARJETAS CLICKABLES
    ============================================================ */
-
 function iniciarTarjetasClickables() {
   document.querySelectorAll(".card-link .card-producto").forEach((tarjeta) => {
     tarjeta.style.cursor = "pointer";
@@ -412,7 +387,6 @@ function iniciarTarjetasClickables() {
 /* ============================================================
    6. CHIPS DE CATEGORÍA
    ============================================================ */
-
 function iniciarChipsCategorias() {
   const chips = document.querySelectorAll(".cat-chip");
   chips.forEach((chip) => {
@@ -426,7 +400,6 @@ function iniciarChipsCategorias() {
 /* ============================================================
    7. ANIMACIÓN DE ENTRADA — Intersection Observer
    ============================================================ */
-
 function iniciarAnimacionEntrada() {
   const elementos = document.querySelectorAll(
     ".card-link, .value-item, .hero-stats .stat",
@@ -458,11 +431,7 @@ function iniciarAnimacionEntrada() {
 
 /* ============================================================
    8. MODAL — VISTA RÁPIDA
-   Captura datos de la tarjeta y los muestra en el modal
-   con transición fade. Cierra con X, backdrop o Escape.
    ============================================================ */
-
-/** Descripciones enriquecidas por producto */
 const DESCRIPCIONES_PRODUCTO = {
   "En Gangocho Vegetal":
     "Carbón vegetal de alta pureza envasado en gangocho artesanal. Quema limpia, larga duración y sin humo excesivo. Ideal para asados, hornos y uso profesional.",
@@ -478,7 +447,6 @@ const DESCRIPCIONES_PRODUCTO = {
     "Carbón en bolsa resistente para fácil transporte y almacenamiento. Presentación estándar apta para todo tipo de uso doméstico e industrial.",
 };
 
-/** Ratings por producto */
 const RATINGS_PRODUCTO = {
   "En Gangocho Vegetal": 4.9,
   "En Gangocho Ecológico": 4.8,
@@ -491,12 +459,7 @@ const RATINGS_PRODUCTO = {
 let modalCantidad = 1;
 let modalProductoActivo = { nombre: "", precio: "" };
 
-/**
- * Rellena el modal con los datos de la tarjeta clicada y lo muestra.
- * @param {HTMLElement} tarjeta - .card-producto del producto
- */
 function abrirModalVistaRapida(tarjeta) {
-  // Extraer datos de la tarjeta
   const imgEl = tarjeta.querySelector(".producto-img img");
   const titulo =
     tarjeta.querySelector(".card-title")?.textContent?.trim() || "Producto";
@@ -507,8 +470,9 @@ function abrirModalVistaRapida(tarjeta) {
   const badgeTxt = badgeEl?.textContent?.trim() || "";
   const esEco = badgeEl?.classList.contains("eco") || false;
 
-  // Imagen con fade
   const modalImg = document.getElementById("modal-img");
+  if (!modalImg) return;
+
   modalImg.classList.remove("img-fade-in");
   modalImg.classList.add("img-fade-out");
 
@@ -522,81 +486,86 @@ function abrirModalVistaRapida(tarjeta) {
     modalImg.classList.add("img-fade-in");
   }, 160);
 
-  // Badge de la imagen
   const badgeImgEl = document.getElementById("modal-badge-img");
-  if (badgeTxt) {
-    badgeImgEl.textContent = badgeTxt;
-    badgeImgEl.className =
-      "modal-badge-img visible" +
-      (esEco ? " badge-eco" : badgeTxt === "Oferta" ? " badge-oferta" : "");
-  } else {
-    badgeImgEl.className = "modal-badge-img";
+  if (badgeImgEl) {
+    if (badgeTxt) {
+      badgeImgEl.textContent = badgeTxt;
+      badgeImgEl.className =
+        "modal-badge-img visible" +
+        (esEco ? " badge-eco" : badgeTxt === "Oferta" ? " badge-oferta" : "");
+    } else {
+      badgeImgEl.className = "modal-badge-img";
+    }
   }
 
-  // Textos
-  document.getElementById("modal-categoria").textContent = categoria;
-  document.getElementById("modal-titulo").textContent = titulo;
-  document.getElementById("modal-precio").textContent = precio;
-  document.getElementById("modal-desc").textContent =
-    DESCRIPCIONES_PRODUCTO[titulo] ||
-    "Producto artesanal de alta calidad, elaborado con materiales 100 % ecológicos.";
-  document.getElementById("modal-rating-val").textContent = (
-    RATINGS_PRODUCTO[titulo] || 4.7
-  ).toFixed(1);
+  if (document.getElementById("modal-categoria"))
+    document.getElementById("modal-categoria").textContent = categoria;
+  if (document.getElementById("modal-titulo"))
+    document.getElementById("modal-titulo").textContent = titulo;
+  if (document.getElementById("modal-precio"))
+    document.getElementById("modal-precio").textContent = precio;
+  if (document.getElementById("modal-desc"))
+    document.getElementById("modal-desc").textContent =
+      DESCRIPCIONES_PRODUCTO[titulo] ||
+      "Producto artesanal de alta calidad, elaborado con materiales 100 % ecológicos.";
+  if (document.getElementById("modal-rating-val"))
+    document.getElementById("modal-rating-val").textContent = (
+      RATINGS_PRODUCTO[titulo] || 4.7
+    ).toFixed(1);
 
-  // Miniaturas (3 vistas simuladas con la misma imagen)
   const thumbsCont = document.getElementById("modal-thumbs");
-  thumbsCont.innerHTML = "";
-  [imgEl?.src, imgEl?.src, imgEl?.src].forEach((src, i) => {
-    if (!src) return;
-    const btn = document.createElement("button");
-    btn.className = "modal-thumb" + (i === 0 ? " thumb-activa" : "");
-    btn.setAttribute("aria-label", `Vista ${i + 1}`);
-    btn.innerHTML = `<img src="${src}" alt="Vista ${i + 1}" />`;
-    btn.addEventListener("click", () => {
-      thumbsCont
-        .querySelectorAll(".modal-thumb")
-        .forEach((t) => t.classList.remove("thumb-activa"));
-      btn.classList.add("thumb-activa");
-      modalImg.classList.add("img-fade-out");
-      setTimeout(() => {
-        modalImg.src = src;
-        modalImg.classList.remove("img-fade-out");
-        modalImg.classList.add("img-fade-in");
-      }, 150);
+  if (thumbsCont) {
+    thumbsCont.innerHTML = "";
+    [imgEl?.src, imgEl?.src, imgEl?.src].forEach((src, i) => {
+      if (!src) return;
+      const btn = document.createElement("button");
+      btn.className = "modal-thumb" + (i === 0 ? " thumb-activa" : "");
+      btn.setAttribute("aria-label", `Vista ${i + 1}`);
+      btn.innerHTML = `<img src="${src}" alt="Vista ${i + 1}" />`;
+      btn.addEventListener("click", () => {
+        thumbsCont
+          .querySelectorAll(".modal-thumb")
+          .forEach((t) => t.classList.remove("thumb-activa"));
+        btn.classList.add("thumb-activa");
+        modalImg.classList.add("img-fade-out");
+        setTimeout(() => {
+          modalImg.src = src;
+          modalImg.classList.remove("img-fade-out");
+          modalImg.classList.add("img-fade-in");
+        }, 150);
+      });
+      thumbsCont.appendChild(btn);
     });
-    thumbsCont.appendChild(btn);
-  });
+  }
 
-  // Resetear cantidad
   modalCantidad = 1;
-  document.getElementById("modal-qty-display").textContent = "1";
-
-  // Guardar producto activo
+  if (document.getElementById("modal-qty-display"))
+    document.getElementById("modal-qty-display").textContent = "1";
   modalProductoActivo = { nombre: titulo, precio };
 
-  // URL personalizada del botón WhatsApp del modal
   const msgWA = encodeURIComponent(
     `¡Hola ${NOMBRE_TIENDA}! 👋 Me interesa el producto: *${titulo}* (${precio}). ¿Está disponible?`,
   );
-  document.getElementById("modal-btn-wa").onclick = () =>
-    window.open(
-      `https://wa.me/${WHATSAPP_NUMERO}?text=${msgWA}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
+  const btnModalWA = document.getElementById("modal-btn-wa");
+  if (btnModalWA) {
+    btnModalWA.onclick = () =>
+      window.open(
+        `https://wa.me/${WHATSAPP_NUMERO}?text=${msgWA}`,
+        "_blank",
+        "noopener,noreferrer",
+      );
+  }
 
-  // Mostrar modal
   const overlay = document.getElementById("modal-vista-rapida");
-  overlay.classList.add("modal-abierto");
-  overlay.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
+  if (overlay) {
+    overlay.classList.add("modal-abierto");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
 
-  // Foco accesible
   setTimeout(() => document.getElementById("modal-cerrar")?.focus(), 50);
 }
 
-/** Cierra el modal con animación de salida */
 function cerrarModalVistaRapida() {
   const overlay = document.getElementById("modal-vista-rapida");
   if (!overlay) return;
@@ -611,9 +580,7 @@ function cerrarModalVistaRapida() {
   }
 }
 
-/** Registra todos los listeners del modal */
 function iniciarModalVistaRapida() {
-  // Botones "Vista Rápida" en las tarjetas
   document.querySelectorAll(".overlay-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -623,75 +590,33 @@ function iniciarModalVistaRapida() {
     });
   });
 
-  // Botón X
   document
     .getElementById("modal-cerrar")
     ?.addEventListener("click", cerrarModalVistaRapida);
-
-  // Clic en el backdrop
   document
     .getElementById("modal-backdrop")
     ?.addEventListener("click", cerrarModalVistaRapida);
 
-  // Selector de cantidad
   document.getElementById("modal-qty-minus")?.addEventListener("click", () => {
     if (modalCantidad <= 1) return;
     modalCantidad--;
-    document.getElementById("modal-qty-display").textContent = modalCantidad;
+    if (document.getElementById("modal-qty-display"))
+      document.getElementById("modal-qty-display").textContent = modalCantidad;
   });
-
-  document.getElementById("modal-qty-plus")?.addEventListener("click", () => {
-    modalCantidad++;
-    document.getElementById("modal-qty-display").textContent = modalCantidad;
-  });
-
-  // Botón "Agregar al Carrito" del modal
-  document
-    .getElementById("modal-btn-agregar")
-    ?.addEventListener("click", () => {
-      const { nombre, precio } = modalProductoActivo;
-      if (!nombre) return;
-
-      for (let i = 0; i < modalCantidad; i++) {
-        agregarAlCarrito(nombre, precio);
-      }
-
-      // Feedback visual en el botón
-      const btn = document.getElementById("modal-btn-agregar");
-      const orig = btn.innerHTML;
-      btn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-        <path d="M5 12l5 5L20 7"/>
-      </svg>
-      ¡Agregado!
-    `;
-      btn.style.background = "#1ebe5a";
-
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.style.background = "";
-        cerrarModalVistaRapida();
-      }, 1400);
-    });
 }
 
 /* ============================================================
-   🚀  INICIALIZACIÓN
+   🚀 INICIALIZACIÓN AUTOMÁTICA AL CARGAR LA PÁGINA
    ============================================================ */
-
 document.addEventListener("DOMContentLoaded", () => {
-  iniciarBadgeCarrito(); // Badge dinámico que comienza en 0
-  crearPanelCarrito(); // Inyecta el drawer lateral en el DOM
-  iniciarBotonesAgregar(); // Captura clics en .btn-add
-  iniciarBotonHeaderCarrito(); // Botón carrito del header abre el panel
-  iniciarBotonWhatsapp(); // Botón flotante con URL dinámica
-  iniciarTarjetasClickables(); // Toda la tarjeta es clicable
-  iniciarChipsCategorias(); // Filtros de categoría
-  iniciarAnimacionEntrada(); // Fade-in al hacer scroll
-  iniciarModalVistaRapida(); // Modal de Vista Rápida
-
-  // Clase para el padding del body en desktop (panel siempre visible)
-  document.body.classList.add("has-panel");
-
-  actualizarUICarrito(); // Estado inicial de la UI
+  crearPanelCarrito(); // Crea la estructura HTML del panel invisible
+  iniciarBadgeCarrito(); // Setea el contador en 0
+  iniciarBotonesAgregar(); // Activa los clicks en "Agregar al Carrito"
+  iniciarBotonHeaderCarrito(); // Activa el icono de bolsa del menú para ver el pedido
+  iniciarBotonWhatsapp(); // Configura el botón verde de abajo
+  iniciarTarjetasClickables();
+  iniciarChipsCategorias();
+  iniciarAnimacionEntrada();
+  iniciarModalVistaRapida();
+  actualizarUICarrito(); // Refresca el estado inicial
 });
